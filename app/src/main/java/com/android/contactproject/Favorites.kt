@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.contactproject.databinding.ActivityMainBinding
+import com.android.contactproject.databinding.FragmentFavoritesBinding
 
 class Favorites : Fragment() {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy { FragmentFavoritesBinding.inflate(layoutInflater) }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -18,7 +18,7 @@ class Favorites : Fragment() {
         val titleList = mutableListOf<TitleData>()
        titleList.add(TitleData("즐겨찾기 목록"))
 
-        val RecyclerView = binding.mainRecyclerview
+        val RecyclerView = binding.favoritesRecyclerview
         RecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())

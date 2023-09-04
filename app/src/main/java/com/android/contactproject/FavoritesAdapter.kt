@@ -1,12 +1,14 @@
 package com.android.contactproject
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.contactproject.databinding.FragmentFavoritesBinding
+import com.android.contactproject.databinding.FavoritesAdapterBinding
 
 class FavoritesAdapter(
     private val titleList: MutableList<TitleData>,
@@ -14,7 +16,7 @@ class FavoritesAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var lesserafim = mutableListOf<MemberData>()
 
-    inner class FavoritesAdapterHolder(private val binding: FragmentFavoritesBinding) :
+    inner class FavoritesAdapterHolder(private val binding: FavoritesAdapterBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val title = binding.favoritesTitle
         val recyclerView = binding.favoritesRecyclerview
@@ -25,7 +27,7 @@ class FavoritesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding = FragmentFavoritesBinding.inflate(LayoutInflater.from(parent.context),
+        val binding = FavoritesAdapterBinding.inflate(LayoutInflater.from(parent.context),
             parent,false)
         return FavoritesAdapterHolder(binding)
     }
@@ -46,9 +48,28 @@ class FavoritesAdapter(
         adapter.itemClick = object :FavoritesItem.ItemClick{
             override fun onFavoritesClick(view: View, position: Int) {
                 val item = lesserafim[position]
-                item.isfavorites = !item.isfavorites
-                lesserafim.remove(item)
-                adapter.notifyDataSetChanged()
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("즐겨찾기 해제")
+                builder.setMessage("즐겨찾기를 해제 하시겠읍니까?")
+
+                val listener = object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        when(which){
+                            DialogInterface.BUTTON_POSITIVE ->{
+                                item.isfavorites = !item.isfavorites
+                                lesserafim.remove(item)
+                                adapter.notifyDataSetChanged()
+                            }
+                            DialogInterface.BUTTON_NEGATIVE -> {
+                                dialog?.dismiss()
+                            }
+                        }
+                    }
+                }
+                builder.setPositiveButton("확인",listener)
+                builder.setNegativeButton("취소",listener)
+
+                builder.show()
             }
         }
     }

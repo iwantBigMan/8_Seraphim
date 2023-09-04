@@ -41,7 +41,7 @@
             android:layout_height="25dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@mipmap/star" />
+            android:src="@mipmap/paintedstar" />
 
     </LinearLayout>
 </LinearLayout>
