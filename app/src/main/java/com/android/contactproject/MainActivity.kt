@@ -1,11 +1,12 @@
 package com.android.contactproject
 
+import android.app.Dialog
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.widget.ViewPager2
+import com.android.contactproject.databinding.ActivityAddContactDialogBinding
 import com.android.contactproject.databinding.ActivityMainBinding
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
@@ -46,5 +47,35 @@ class MainActivity : AppCompatActivity() {
                 super.onPageScrollStateChanged(state)
             }
         })
+
+        // 플로팅 버튼 클릭시
+        binding.btnaddmember.setOnClickListener {
+            val click = AddContactDialog(this)
+            click.show()
+        }
+    }
+    class AddContactDialog(context: Context) : Dialog(context)  {
+
+        private lateinit var binding : ActivityAddContactDialogBinding
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+
+            binding = ActivityAddContactDialogBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+
+            // 취소 버튼 클릭 시
+            binding.dialogCancelbtn.setOnClickListener {
+                // dialog 닫기
+                dismiss()
+            }
+
+            // 확인 버튼 클릭 시
+            binding.dialogAcceptbtn.setOnClickListener {
+                // textview의 text 데이터 넘기기
+                // dialog 닫기
+                dismiss()
+            }
+        }
     }
 }
