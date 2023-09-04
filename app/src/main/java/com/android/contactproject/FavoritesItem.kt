@@ -12,7 +12,7 @@ class FavoritesItem(private val lesserafim: MutableList<MemberData>) : RecyclerV
         fun onFavoritesClick(view: View, position: Int)
     }
 
-    val itemClick: ItemClick? = null
+    var itemClick: ItemClick? = null
 
     inner class FavoritesItemHolder(val binding: FavoritesItemBinding) :
         RecyclerView.ViewHolder

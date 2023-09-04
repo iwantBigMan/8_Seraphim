@@ -2,6 +2,7 @@ package com.android.contactproject
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +42,14 @@ class FavoritesAdapter(
             recyclerView.setHasFixedSize(true)
             title.text = item.title
             recyclerView.adapter = adapter
+        }
+        adapter.itemClick = object :FavoritesItem.ItemClick{
+            override fun onFavoritesClick(view: View, position: Int) {
+                val item = lesserafim[position]
+                item.isfavorites = !item.isfavorites
+                lesserafim.remove(item)
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 }
