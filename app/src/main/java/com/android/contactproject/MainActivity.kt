@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.android.contactproject.databinding.ActivityAddContactDialogBinding
 import com.android.contactproject.databinding.ActivityMainBinding
