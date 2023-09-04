@@ -13,10 +13,21 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:scaleType="fitCenter"
+        android:layout_marginEnd="30dp"
         android:src="@drawable/character1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="사진을 추가하려면 아이콘 클릭!"
+        android:src="@drawable/add"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_image"
+        app:layout_constraintStart_toEndOf="@+id/dialog_image" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
