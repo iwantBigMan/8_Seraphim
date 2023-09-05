@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(context, "사진 추가를 위한 아이콘을 선택하셨습니다.", Toast.LENGTH_SHORT).show()
                 // 갤러리 열기
                 val intent = Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                intent.type = "image/*"
                 context.startActivity(intent)
                 // 선택한 사진을 image에 등록하기
             }
