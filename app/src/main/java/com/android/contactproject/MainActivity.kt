@@ -1,5 +1,6 @@
 package com.android.contactproject
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -7,8 +8,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.viewpager2.widget.ViewPager2
 import com.android.contactproject.databinding.ActivityAddContactDialogBinding
 import com.android.contactproject.databinding.ActivityMainBinding
@@ -16,17 +17,18 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private lateinit var selectedImage: ImageView
     private val tabList = listOf("ContactList", "Favorites", "MyPage")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.viewPager.adapter = ViewPagerAdapter(this)
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager){tab, position ->
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabList[position]
         }.attach()
 
-        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             var currentState = 0
             var currentPosition = 0
 
@@ -35,9 +37,9 @@ class MainActivity : AppCompatActivity() {
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-                if(currentState == ViewPager2.SCROLL_STATE_DRAGGING&&currentPosition == position){
-                    if (currentPosition == 0) binding.viewPager.currentItem =2
-                    else if(currentPosition ==2) binding.viewPager.currentItem =0
+                if (currentState == ViewPager2.SCROLL_STATE_DRAGGING && currentPosition == position) {
+                    if (currentPosition == 0) binding.viewPager.currentItem = 2
+                    else if (currentPosition == 2) binding.viewPager.currentItem = 0
                 }
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
             }
@@ -60,29 +62,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    class AddContactDialog(context: Context) : Dialog(context)  {
+    class AddContactDialog(context : Context) : Dialog(context) {
 
-        private lateinit var binding : ActivityAddContactDialogBinding
+        private lateinit var binding: ActivityAddContactDialogBinding
 
+        @SuppressLint("IntentReset")
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-
             binding = ActivityAddContactDialogBinding.inflate(layoutInflater)
             setContentView(binding.root)
 
             val image = binding.dialogImage
             val name = binding.dialogName
             val phone = binding.dialogPhone
+            val address = binding.dialogAddress
             val event = binding.dialogEvent
 
             // 사진 추가 버튼 클릭 시
             binding.imageButton.setOnClickListener {
                 Toast.makeText(context, "사진 추가를 위한 아이콘을 선택하셨습니다.", Toast.LENGTH_SHORT).show()
                 // 갤러리 열기
-                val intent = Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                val intent =
+                    Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 intent.type = "image/*"
-                context.startActivity(intent)
-                // 선택한 사진을 image에 등록하기
+
+                // 폴더 열기 및 사진 선택
+                //context.startActivity(intent)
+                (context as? Activity)?.startActivityForResult(intent, GALLERY_CODE)
+
+                // *************************
+                // 선택한 사진을 image에 등록하기 -> selectedImage 초기화 필요???
+                // *************************
             }
 
             // 취소 버튼 클릭 시
@@ -93,11 +103,25 @@ class MainActivity : AppCompatActivity() {
 
             // 확인 버튼 클릭 시
             binding.dialogAcceptbtn.setOnClickListener {
-                // textview의 text 데이터 넘기기
 
-                // dialog 닫기
-                dismiss()
+
             }
         }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == GALLERY_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            // 선택한 이미지 uri 데이터 저장
+            val selectedUri = data.data
+            // 선택한 이미지의 uri를 selectedImages에 설정
+            selectedImage.setImageURI(selectedUri)
+        }
+    }
+
+    companion object {
+        val GALLERY_CODE = 111
     }
 }
