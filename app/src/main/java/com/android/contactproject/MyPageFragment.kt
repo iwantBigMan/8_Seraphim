@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.android.contactproject.databinding.FragmentMyPageBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,6 +18,10 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MyPageFragment : Fragment() {
+    private lateinit var binding : FragmentMyPageBinding
+    // Inflate the layout for this fragment
+    var myData = MyPageData("김지수","010-9999-9999","5분뒤 알림")
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -33,8 +38,16 @@ class MyPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_page, container, false)
+        binding = FragmentMyPageBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.myName.text = myData.name
+        binding.myMobile.text = myData.mobile
+        binding.myEvent.text = myData.event
     }
 
     companion object {
