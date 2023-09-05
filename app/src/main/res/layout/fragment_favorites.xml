@@ -4,9 +4,29 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/favorites_searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="검색어를 입력하세요"
+        android:elevation="5dp"/>
+
+    <TextView
+        android:id="@+id/favorites_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@color/black"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorites_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>
