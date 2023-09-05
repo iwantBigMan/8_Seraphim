@@ -1,5 +1,6 @@
 package com.android.contactproject
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -62,7 +63,6 @@ class MainActivity : AppCompatActivity() {
     class AddContactDialog(context: Context) : Dialog(context)  {
 
         private lateinit var binding : ActivityAddContactDialogBinding
-        private lateinit var pickImageLauncher : ActivityResultLauncher<String>
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -79,11 +79,10 @@ class MainActivity : AppCompatActivity() {
             binding.imageButton.setOnClickListener {
                 Toast.makeText(context, "사진 추가를 위한 아이콘을 선택하셨습니다.", Toast.LENGTH_SHORT).show()
                 // 갤러리 열기
-                openGallery()
+                val intent = Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                context.startActivity(intent)
                 // 선택한 사진을 image에 등록하기
-                val selectedImage = openGallery()
-                }
-
+            }
 
             // 취소 버튼 클릭 시
             binding.dialogCancelbtn.setOnClickListener {
@@ -99,12 +98,5 @@ class MainActivity : AppCompatActivity() {
                 dismiss()
             }
         }
-
-        // 갤러리 열기 함수 생성
-        private fun openGallery() {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            pickImageLauncher.launch("image/*")
-        }
     }
-
 }
