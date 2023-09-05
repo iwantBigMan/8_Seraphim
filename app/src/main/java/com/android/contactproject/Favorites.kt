@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import com.android.contactproject.databinding.FragmentFavoritesBinding
 
 class Favorites : Fragment() {
     private val binding by lazy { FragmentFavoritesBinding.inflate(layoutInflater) }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +38,7 @@ class Favorites : Fragment() {
         binding.favoritesTitle.text = lesserafim.keys.elementAt(0)
         binding.favoritesRecyclerview.apply {
             adapter = FavoritesAdapter(lesserafim).apply {
-                itemClick = object :FavoritesAdapter.ItemClick{
+                itemClick = object : FavoritesAdapter.ItemClick {
                     override fun onFavoritesClick(view: View, position: Int) {
                         val item = lesserafim.values.flatten()[position]
                         val valuesList = lesserafim.values.find { list ->
@@ -48,20 +50,21 @@ class Favorites : Fragment() {
 
                         val listener = object : DialogInterface.OnClickListener {
                             override fun onClick(dialog: DialogInterface?, which: Int) {
-                                when(which){
-                                    DialogInterface.BUTTON_POSITIVE ->{
+                                when (which) {
+                                    DialogInterface.BUTTON_POSITIVE -> {
                                         item.isfavorites = !item.isfavorites
                                         valuesList?.remove(item)
-                                       notifyDataSetChanged()
+                                        notifyDataSetChanged()
                                     }
+
                                     DialogInterface.BUTTON_NEGATIVE -> {
                                         dialog?.dismiss()
                                     }
                                 }
                             }
                         }
-                        builder.setPositiveButton("확인",listener)
-                        builder.setNegativeButton("취소",listener)
+                        builder.setPositiveButton("확인", listener)
+                        builder.setNegativeButton("취소", listener)
 
                         builder.show()
                     }
@@ -76,18 +79,23 @@ class Favorites : Fragment() {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
-                return true
+                binding.favoritesSearchView.clearFocus()
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
+//                filterList(newText)
                 return true
             }
         })
 
         return binding.root
     }
+//    private fun fliterList(query : String?): Boolean{
+//        if(query != null){
+//
+//        }
+//    }
 }
 
 data class MemberData(
