@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.android.contactproject.databinding.ActivityAddContactDialogBinding
@@ -61,6 +62,8 @@ class MainActivity : AppCompatActivity() {
 
         // 플로팅 버튼 클릭시
         binding.btnaddmember.setOnClickListener {
+            val basicImage = findViewById<ImageView>(R.id.dialog_image)
+            Uri.parse("android.resource//" + R::class.java.`package`?.name + "/" + R.drawable.character1)
             selectedUri = Uri.EMPTY
             val click = AddContactDialog(this@MainActivity, this@MainActivity, selectedUri)
             click.show()
@@ -72,8 +75,6 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == GALLERY_CODE && resultCode == Activity.RESULT_OK && data != null) {
             // 선택한 이미지 uri 데이터 저장
             selectedUri = data.data!!
-
-            // 이미지 설정
         }
     }
 
@@ -108,8 +109,6 @@ class MainActivity : AppCompatActivity() {
                 intent.type = "image/*"
                 activity.startActivityForResult(intent, GALLERY_CODE)
             }
-            image.setImageURI(imageUri)
-
 
             // name 텍스트 필드 유효성 검사
             name.addTextChangedListener(object : TextWatcher {
