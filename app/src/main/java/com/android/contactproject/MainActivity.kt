@@ -17,7 +17,6 @@ import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.android.contactproject.databinding.ActivityAddContactDialogBinding
 import com.android.contactproject.databinding.ActivityMainBinding
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
@@ -79,9 +78,6 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == GALLERY_CODE && resultCode == Activity.RESULT_OK && data != null) {
             // 선택한 이미지 uri 데이터 저장
             selectedUri = data.data!!
-            Glide.with(this)
-                .load(selectedUri)
-                .into(basicImage)
         }
     }
 
