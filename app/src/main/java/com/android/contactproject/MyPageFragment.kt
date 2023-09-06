@@ -3,6 +3,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.service.autofill.UserData
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import com.android.contactproject.R
+import com.android.contactproject.contactlist.UserDataModel
 import com.android.contactproject.databinding.FragmentMyPageBinding
 
 class MyPageFragment : Fragment() {
@@ -31,10 +33,12 @@ class MyPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        val userData = arguments?.getParcelable<UserDataModel>("UserData")
 
         binding.myImage.setImageResource(R.drawable.jisoo)
-        binding.myName.text = "김지수"
-        binding.myMobile.text = "010-9999-9999"
+        binding.myName.text = userData?.name
+        binding.myMobile.text = userData?.ph
         binding.myEvent.text = "5분뒤 알림"
 
         binding.btnRevise.setOnClickListener {

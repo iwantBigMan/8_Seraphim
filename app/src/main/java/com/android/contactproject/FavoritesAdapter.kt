@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.android.contactproject.contactlist.UserDataModel
 import com.android.contactproject.databinding.FavoritesAdapterBinding
 
 class FavoritesAdapter(
-    private val lesserafim: Map<String, MutableList<MemberData>>
+    private val lesserafim:MutableList<UserDataModel>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface ItemClick {
@@ -17,19 +18,19 @@ class FavoritesAdapter(
 
     inner class FavoritesAdapterHolder(private val binding: FavoritesAdapterBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(member: MemberData) {
+        fun bind(member: UserDataModel) {
             binding.apply {
-                favoritesProfile.setImageResource(member.profile)
+                favoritesProfile.setImageResource(member.userImage)
                 favoritesName.text = member.name
-                favoritesTel.text = member.tel
+                favoritesTel.text = member.ph
 
                 favorites.setOnClickListener {
                     itemClick?.onFavoritesClick(it, position)
                 }
-                if(member.isfavorites){
-                    binding.favoritesFavorites.setImageResource(R.mipmap.paintedstar)
+                if(member.isLike){
+                    binding.favoritesFavorites.setImageResource(R.drawable.painted_heart)
                 }else{
-                    binding.favoritesFavorites.setImageResource(R.mipmap.star)
+                    binding.favoritesFavorites.setImageResource(R.drawable.heart)
                 }
             }
         }
@@ -38,7 +39,7 @@ class FavoritesAdapter(
     }
 
     override fun getItemCount(): Int {
-        return lesserafim.values.sumOf { it.size }
+        return lesserafim.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -51,7 +52,7 @@ class FavoritesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder as FavoritesAdapterHolder
-        val member = lesserafim.values.flatten()[position]
+        val member = lesserafim[position]
         holder.bind(member)
     }
 }
