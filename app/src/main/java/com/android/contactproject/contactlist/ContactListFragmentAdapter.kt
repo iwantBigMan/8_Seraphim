@@ -10,10 +10,7 @@ import com.android.contactproject.databinding.ContactListItemBinding
 class ContactListFragmentAdapter(private val list:MutableList<UserDataModel>): RecyclerView
 .Adapter<ContactListFragmentAdapter.ViewHolder>
     () {
-//    interface ItemLongClick {
-//        fun onLongClick(view: View, position: Int )
-//
-//    }
+
     interface ItemClick {
         fun onClick(view: View, position: Int )
         fun onImageLongClick(view:View, position:Int)
