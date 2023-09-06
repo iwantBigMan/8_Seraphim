@@ -1,6 +1,6 @@
 package com.android.contactproject
 
-import MyPageFragment
+
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.contactproject.contactlist.ContactListFragment
