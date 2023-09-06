@@ -2,6 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="light_gray">#757373</color>
     <color name="pupple">#6200ED</color>
 
     <color name="Red50">#FFEBEE</color>
@@ -108,5 +110,6 @@
     <color name="OrangeA200">#FFAB40</color>
     <color name="OrangeA400">#FF9100</color>
     <color name="OrangeA700">#FF6D00</color>
+
 
 </resources>
