@@ -4,19 +4,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.android.contactproject.R
 import com.android.contactproject.databinding.ContactListItemBinding
 
-class ContactListFragmentAdapter: RecyclerView.Adapter<ContactListFragmentAdapter.ViewHolder>() {
+class ContactListFragmentAdapter(private val list:MutableList<UserDataModel>): RecyclerView
+.Adapter<ContactListFragmentAdapter.ViewHolder>
+    () {
 //    interface ItemLongClick {
 //        fun onLongClick(view: View, position: Int )
 //
 //    }
-//    interface ItemClick {
-//        fun onClick(view: View, position: Int )
-//    }
+    interface ItemClick {
+        fun onClick(view: View, position: Int )
+        fun onImageLongClick(view:View, position:Int)
+    }
+    var itemClick:ItemClick? = null
 
 
-    private var list = mutableListOf<UserDataModel>()
 
 //    fun addItem(phoneNumberModel: UserDataModel) {
 //        if (phoneNumberModel == null) {
@@ -60,13 +64,25 @@ class ContactListFragmentAdapter: RecyclerView.Adapter<ContactListFragmentAdapte
             userName.text = item.name
             phNumber.text = item.ph
             profileImage.setImageResource(list[position].userImage)
-            mainLike.setImageResource(list[position].isLike)
+
+            itemView.setOnLongClickListener {
+                itemClick?.onImageLongClick(it, position)
+                true
+            }
+            like.setOnClickListener {
+                itemClick?.onClick(it, position)
+            }
+            if(list[position].isLike){
+                binding.mainLike.setImageResource(R.drawable.painted_heart)
+            }else{
+                binding.mainLike.setImageResource(R.drawable.heart)
+            }
 
         }
-
+        val profile = binding.profileImage
+        val like = binding.mainLike
     }
     fun replace(newList: MutableList<UserDataModel>){
-        list = newList.toMutableList()
         notifyDataSetChanged()
     }
 
