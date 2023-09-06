@@ -1,5 +1,6 @@
 package com.android.contactproject.contactlist
 
+import MyPageFragment
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,7 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.contactproject.ContactDetailFragment
+
 import com.android.contactproject.R
 import com.android.contactproject.databinding.ContactListFragmentBinding
 import com.android.contactproject.databinding.ContactListItemBinding
@@ -56,13 +57,18 @@ class ContactListFragment : Fragment() {
               }
 
               override fun onImageLongClick(view: View, position: Int) {
+                  val bundle = Bundle()
+                  val item = list[position]
+                  bundle.putParcelable("UserData", item)
                   val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                  val contactDetailFragment = ContactDetailFragment()
-                  transaction.replace(R.id.main_layout, contactDetailFragment)
+                  val myPageFragment = MyPageFragment()
+                  myPageFragment.arguments = bundle
+                  transaction.replace(R.id.main_layout, myPageFragment)
                   transaction.commit()
               }
 
           }
+
       }
     }
 
@@ -75,7 +81,9 @@ class ContactListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = ContactListFragmentBinding.inflate(inflater, container, false)
-        list.apply { add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038", "남궁현"))
+        list.apply {
+            add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",
+                "남궁현"))
             add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",
                 "박준수"))
             add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",
@@ -104,5 +112,7 @@ class ContactListFragment : Fragment() {
         _binding = null
         super.onDestroyView()
     }
+
+
 
 }
