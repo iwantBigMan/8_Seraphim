@@ -34,11 +34,11 @@ class MyPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        val userData = arguments?.getParcelable<UserDataModel>("UserData")
+
 
         binding.myImage.setImageResource(R.drawable.jisoo)
-        binding.myName.text = userData?.name
-        binding.myMobile.text = userData?.ph
+        binding.myName.text = "다민님바보"
+        binding.myMobile.text = "010-1111-1111"
         binding.myEvent.text = "5분뒤 알림"
 
         binding.btnRevise.setOnClickListener {

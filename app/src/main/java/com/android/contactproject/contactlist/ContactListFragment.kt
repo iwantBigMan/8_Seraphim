@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.contactproject.ContactDetailFragment
 
 import com.android.contactproject.R
 import com.android.contactproject.databinding.ContactListFragmentBinding
@@ -61,9 +62,9 @@ class ContactListFragment : Fragment() {
                   val item = list[position]
                   bundle.putParcelable("UserData", item)
                   val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                  val myPageFragment = MyPageFragment()
-                  myPageFragment.arguments = bundle
-                  transaction.replace(R.id.main_layout, myPageFragment)
+                  val contactDetailFragment = ContactDetailFragment()
+                 contactDetailFragment.arguments = bundle
+                  transaction.replace(R.id.main_layout, contactDetailFragment)
                   transaction.commit()
               }
 
