@@ -2,6 +2,7 @@ package com.android.contactproject.contactlist
 
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,10 +16,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.AddMemberData
-import com.android.contactproject.ContactDetailFragment
 import com.android.contactproject.R
 import com.android.contactproject.SwipeToDeleteCallback
 import com.android.contactproject.databinding.ContactListFragmentBinding
+import com.android.contactproject.detailPage.ContactDetailActivity
 
 
 class ContactListFragment : Fragment() {
@@ -65,15 +66,26 @@ class ContactListFragment : Fragment() {
                   builder.show()
               }
 
+//              override fun onImageLongClick(view: View, position: Int) {
+//                  val bundle = Bundle()
+//                  val item = list[position]
+//                  bundle.putParcelable("UserData", item)
+//                  val transaction = requireActivity().supportFragmentManager.beginTransaction()
+//                  val contactDetailFragment = ContactDetailFragment()
+//                 contactDetailFragment.arguments = bundle
+//                  transaction.replace(R.id.main_layout, contactDetailFragment)
+//                  transaction.commit()
+//              }
+
               override fun onImageLongClick(view: View, position: Int) {
-                  val bundle = Bundle()
                   val item = list[position]
-                  bundle.putParcelable("UserData", item)
-                  val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                  val contactDetailFragment = ContactDetailFragment()
-                 contactDetailFragment.arguments = bundle
-                  transaction.replace(R.id.main_layout, contactDetailFragment)
-                  transaction.commit()
+
+                  // 데이터를 Intent에 추가
+                  val intent = Intent(requireContext(), ContactDetailActivity::class.java)
+                  intent.putExtra("userData", item)
+
+                  // ContactDetailActivity를 시작
+                  startActivity(intent)
               }
 
           }
@@ -92,18 +104,16 @@ class ContactListFragment : Fragment() {
             this
         ) { key, result ->
             val getFavorites = result.getParcelableArrayList<UserDataModel>("ToContactList")
-            Log.d("ContactProjects", "Favorites에서 다시 받아온 데이터 : ${getFavorites}")
-            if (getFavorites != null) {
-                getFavorites.forEach { item ->
-                    val index = list.indexOfFirst { it.name == item.name }
-                    list[index].isLike =false
-                }
+            Log.d("ContactProjects", "Favorites에서 다시 받아온 데이터 : $getFavorites")
+            getFavorites?.forEach { item ->
+                val index = list.indexOfFirst { it.name == item.name }
+                list[index].isLike =false
             }
             listAdapter.notifyDataSetChanged()
         }
         parentFragmentManager.setFragmentResultListener("FromDialogKey", this) { key, result ->
             val getDialog = result.getParcelableArrayList<AddMemberData>("FromDialog")
-            Log.d("ContactProjects", "Favorites에서 다시 받아온 데이터 : ${getDialog}")
+            Log.d("ContactProjects", "Fav   orites에서 다시 받아온 데이터 : $getDialog")
         }
         _binding = ContactListFragmentBinding.inflate(inflater, container, false)
         list.apply {
