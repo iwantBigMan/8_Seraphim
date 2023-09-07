@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:backgroundTint="#FFFFFF">
+    android:backgroundTint="#FFFFFF"
+    tools:context=".detailPage.ContactDetailActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout7"
@@ -13,14 +14,16 @@
         android:layout_height="60dp"
         android:background="#FFB6C1"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:text="상세정보"
+            android:textColor="@color/white"
             android:textSize="25dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,11 +36,11 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="15dp"
-            android:tint="#FFFFFF"
             android:src="@drawable/left"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#FFFFFF" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,14 +54,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/character2"
-             />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@drawable/gradation"
-            app:layout_constraintBottom_toBottomOf="@+id/character">
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintBottom_toBottomOf="@+id/character"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"></androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -74,7 +81,7 @@
             android:layout_height="match_parent"
             >
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/message"
                 android:layout_width="100dp"
                 android:layout_height="80dp"
@@ -83,12 +90,13 @@
                 android:background="@color/white"
                 android:scaleType="fitCenter"
                 android:src="@drawable/email"
+                app:layout_constraintBottom_toTopOf="@+id/constraintLayout6"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-            </ImageButton>
+            </ImageView>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/call"
                 android:layout_width="150dp"
                 android:layout_height="80dp"
@@ -97,8 +105,9 @@
                 android:backgroundTint="#FFFFFF"
                 android:scaleType="fitCenter"
                 android:src="@drawable/call"
+                app:layout_constraintBottom_toTopOf="@+id/constraintLayout6"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"></ImageButton>
+                app:layout_constraintTop_toTopOf="parent"></ImageView>
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -107,7 +116,10 @@
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/layoutbackground_1"
-                tools:layout_editor_absoluteX="10dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints"
                 tools:layout_editor_absoluteY="101dp">
 
                 <TextView
@@ -176,8 +188,10 @@
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/layoutbackground_1"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
-                tools:layout_editor_absoluteX="26dp">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6">
 
                 <TextView
                     android:id="@+id/mobile"
@@ -210,4 +224,3 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
