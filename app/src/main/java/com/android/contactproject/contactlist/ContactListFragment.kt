@@ -135,7 +135,7 @@ class ContactListFragment : Fragment() {
         listAdapter.replace(list)
         contactListRe.setHasFixedSize(true)
         // ItemTouchHelper를 초기화하고 RecyclerView에 연결
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(listAdapter))
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(requireContext(),listAdapter))
         itemTouchHelper.attachToRecyclerView(contactListRe)
 
     }
