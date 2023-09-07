@@ -45,9 +45,6 @@ class ContactListFragmentAdapter(private val list:MutableList<UserDataModel>): R
         holder.bind(item)
 
 
-
-
-
     }
 
     inner class ViewHolder(
@@ -82,5 +79,8 @@ class ContactListFragmentAdapter(private val list:MutableList<UserDataModel>): R
     fun replace(newList: MutableList<UserDataModel>){
         notifyDataSetChanged()
     }
-
+    fun deleteItem(position: Int) {
+        list.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }
