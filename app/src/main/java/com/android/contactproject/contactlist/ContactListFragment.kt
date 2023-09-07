@@ -3,6 +3,7 @@ package com.android.contactproject.contactlist
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.AddContactDialogFragment
+import com.android.contactproject.AddMemberData
 import com.android.contactproject.ContactDetailFragment
 import com.android.contactproject.R
 import com.android.contactproject.SwipeToDeleteCallback
@@ -40,7 +42,11 @@ class ContactListFragment : Fragment() {
                           when (which) {
                               DialogInterface.BUTTON_POSITIVE -> {
                                  item.isLike = !item.isLike
-                                  listArray.add(item)
+                                  if(item.isLike){
+                                      listArray.add(item)
+                                  }else{
+                                      listArray.remove(item)
+                                  }
                                   notifyDataSetChanged()
                                   val bundle = Bundle()
                                   bundle.putParcelableArrayList("ToFavorites", listArray)
@@ -81,6 +87,24 @@ class ContactListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        parentFragmentManager.setFragmentResultListener(
+            "ToContactListKey",
+            this
+        ) { key, result ->
+            val getFavorites = result.getParcelableArrayList<UserDataModel>("ToContactList")
+            Log.d("ContactProjects", "Favorites에서 다시 받아온 데이터 : ${getFavorites}")
+            if (getFavorites != null) {
+                getFavorites.forEach { item ->
+                    val index = list.indexOfFirst { it.name == item.name }
+                    list[index].isLike =false
+                }
+            }
+            listAdapter.notifyDataSetChanged()
+        }
+        parentFragmentManager.setFragmentResultListener("FromDialogKey", this) { key, result ->
+            val getDialog = result.getParcelableArrayList<AddMemberData>("FromDialog")
+            Log.d("ContactProjects", "Favorites에서 다시 받아온 데이터 : ${getDialog}")
+        }
         _binding = ContactListFragmentBinding.inflate(inflater, container, false)
         list.apply {
             add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",

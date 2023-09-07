@@ -17,6 +17,7 @@ import com.android.contactproject.databinding.FragmentFavoritesBinding
 
 class Favorites : Fragment() {
     private val binding by lazy { FragmentFavoritesBinding.inflate(layoutInflater) }
+    private val lesserafimList = arrayListOf<UserDataModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +54,7 @@ class Favorites : Fragment() {
                     override fun onFavoritesClick(view: View, position: Int) {
                         if (position in 0 until lesserafim.size) {
                             val item = lesserafim[position]
-                            val lesserafimList = arrayListOf<UserDataModel>()
+
                             val builder = AlertDialog.Builder(context)
                             builder.setTitle("즐겨찾기 해제")
                             builder.setMessage("즐겨찾기를 해제 하시겠읍니까?")
