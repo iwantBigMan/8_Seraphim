@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.android.contactproject.databinding.FragmentAddContactDialogBinding
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 
 class AddContactDialogFragment : DialogFragment() {
     private val binding by lazy{ FragmentAddContactDialogBinding.inflate(layoutInflater)}
@@ -32,15 +33,33 @@ class AddContactDialogFragment : DialogFragment() {
                 addMemberResult.launch(intent)
             }
             dialogAcceptbtn.setOnClickListener {
-                val profile = uri ?: return@setOnClickListener
                 val name = dialogName.text.toString()
                 val phone = dialogPhone.text.toString()
                 val address = dialogAddress.text.toString()
-                val lesserafim = AddMemberData(profile,name,phone,address)
-                lesserafimList.add(lesserafim)
-                val bundle = Bundle()
-                bundle.putParcelableArrayList("FromDialog", lesserafimList)
-                setFragmentResult("FromDialogKey",bundle)
+                if (name.isNotBlank() && phone.isNotBlank() && address.isNotBlank()) {
+                    if(uri != null){
+                        val profile = uri ?: return@setOnClickListener
+                        val lesserafim = AddMemberData(profile, name, phone, address)
+                        lesserafimList.add(lesserafim)
+                        val bundle = Bundle()
+                        bundle.putParcelableArrayList("FromDialog", lesserafimList)
+                        setFragmentResult("FromDialogKey", bundle)
+
+                        dismiss()
+                    }else{
+                        Snackbar.make(requireView(), "프로필 사진을 선택 해주세요.", Snackbar.LENGTH_SHORT).apply {
+                            anchorView = binding.dialogImage
+                        }
+                            .show()
+                    }
+                } else {
+                    Snackbar.make(requireView(), "정보를 모두 입력하세요.", Snackbar.LENGTH_SHORT).apply {
+                        anchorView = binding.dialogImage
+                    }.show()
+                }
+            }
+            dialogCancelbtn.setOnClickListener {
+                dismiss()
             }
         }
 
