@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.ContactDetailFragment
 
 import com.android.contactproject.R
@@ -95,6 +97,11 @@ class ContactListFragment : Fragment() {
                 "박성수"))
           }
         initView()
+
+        binding.btnaddmember.setOnClickListener{
+            val popUp = AddContactDialogFragment()
+            popUp.show((activity as AppCompatActivity).supportFragmentManager, "popUp")
+        }
         return binding.root
     }
 
