@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.setFragmentResult
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.ContactDetailFragment
-
 import com.android.contactproject.R
+import com.android.contactproject.SwipeToDeleteCallback
 import com.android.contactproject.databinding.ContactListFragmentBinding
-import com.android.contactproject.databinding.ContactListItemBinding
 
 
 class ContactListFragment : Fragment() {
@@ -76,8 +76,6 @@ class ContactListFragment : Fragment() {
     }
 
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -112,6 +110,9 @@ class ContactListFragment : Fragment() {
         contactListRe.adapter = listAdapter
         listAdapter.replace(list)
         contactListRe.setHasFixedSize(true)
+        // ItemTouchHelper를 초기화하고 RecyclerView에 연결
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(listAdapter))
+        itemTouchHelper.attachToRecyclerView(contactListRe)
 
     }
 
