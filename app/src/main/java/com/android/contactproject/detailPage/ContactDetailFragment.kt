@@ -1,4 +1,4 @@
-package com.android.contactproject
+package com.android.contactproject.detailPage
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
+import com.android.contactproject.R
 import com.android.contactproject.contactlist.UserDataModel
 import com.android.contactproject.databinding.FragmentContactDetailBinding
 import com.android.contactproject.databinding.FragmentMyPageBinding
@@ -49,12 +50,7 @@ class ContactDetailFragment : Fragment() {
 //        event.visibility = View.GONE
 //        }
 
-//        //받아온 데이터를 UI에 표시
-//        binding.character.setImageResource()
-//        binding.name2.text()
-//        binding.number.text()
-//        binding.Event.text()
-//        binding.wort.text()
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +58,13 @@ class ContactDetailFragment : Fragment() {
     ): View? {
 
         val userData = arguments?.getParcelable<UserDataModel>("UserData")
+        //받아온 데이터를 UI에 표시
+        // binding.character.setImageResource()
+            binding.name2.text = userData?.name
+            binding.number.text = userData?.ph
+
+        //binding.Event.text()
+        //binding.wort.text()
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_contact_detail, container, false)
