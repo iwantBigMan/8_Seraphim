@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.contactproject.contactlist.ContactListFragmentAdapter
 
+
 class SwipeToDeleteCallback(private val adapter: ContactListFragmentAdapter) :
 
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -20,7 +21,7 @@ class SwipeToDeleteCallback(private val adapter: ContactListFragmentAdapter) :
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         if (direction == ItemTouchHelper.RIGHT) {
             val position = viewHolder.adapterPosition
-            adapter.deleteItem(position)
+            adapter.makePhoneCall(position)
         }
     }
 }
