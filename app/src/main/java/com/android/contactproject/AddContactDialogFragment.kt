@@ -1,6 +1,7 @@
 package com.android.contactproject
 
-import android.app.Activity
+
+import android.app.Activity.NOTIFICATION_SERVICE
 import android.app.Activity.RESULT_OK
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -20,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -236,7 +238,8 @@ class AddContactDialogFragment : DialogFragment() {
     }
 
     private fun ReservationNotification(context : Context){
-        val manager = context.getSystemService(Activity.NOTIFICATION_SERVICE) as NotificationManager
+
+        val manager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val builder : NotificationCompat.Builder
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
