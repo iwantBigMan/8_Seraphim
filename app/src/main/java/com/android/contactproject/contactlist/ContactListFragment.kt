@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.AddMemberData
-import com.android.contactproject.ContactDetailFragment
 import com.android.contactproject.R
 import com.android.contactproject.SwipeToDeleteCallback
 import com.android.contactproject.databinding.ContactListFragmentBinding
