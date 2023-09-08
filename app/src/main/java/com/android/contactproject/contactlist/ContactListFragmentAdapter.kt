@@ -10,14 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.contactproject.R
 import com.android.contactproject.databinding.ContactListItemBinding
-
+import com.android.contactproject.databinding.ContactListItemTypeBinding
 
 
 class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : RecyclerView
-.Adapter<ContactListFragmentAdapter.ContactViewHolder>
+.Adapter<RecyclerView.ViewHolder>
     () {
 
     interface ItemClick {
@@ -45,21 +46,39 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
         return list.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
-        return ContactViewHolder(
-            ContactListItemBinding.inflate(LayoutInflater.from(parent.context))
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when(viewType){
+           ViewType.leftType -> {
+               val binding = ContactListItemBinding.inflate(LayoutInflater.from(parent.context),
+                   parent,false)
+               ViewHolder(binding)
+           }
+            ViewType.rightType ->{
+                val binding = ContactListItemTypeBinding.inflate(LayoutInflater.from(parent
+                    .context),parent,false)
+                ViewHolder2(binding)
+            }
+            else -> throw IllegalArgumentException("잘못된 viewType 입니다.")
+        }
+
     }
 
 
-    override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = list[position]
-        holder.bind(item)
+        when(holder){
+            is ViewHolder ->{
+               holder.bind(item)
+            }
+            is ViewHolder2 ->{
+                holder.bind(item)
+            }
+        }
 
 
     }
 
-    inner class ContactViewHolder(
+    inner class ViewHolder(
         private val binding: ContactListItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: UserDataModel) = with(binding) {
@@ -89,10 +108,38 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
 
     }
 
+    inner class ViewHolder2(private val binding: ContactListItemTypeBinding) : RecyclerView
+    .ViewHolder
+        (binding.root) {
+        fun bind(item: UserDataModel) {
+            binding.apply {
+                typeProfileImage.setImageResource(item.userImage)
+                typeUserName.text = item.name
+                typePhNumber.text = item.ph
+
+                itemView.setOnLongClickListener {
+                    itemClick?.onImageLongClick(it, position)
+                    true
+                }
+                like.setOnClickListener {
+                    itemClick?.onClick(it, position)
+                }
+                if (list[position].isLike) {
+                    binding.typeMainLike.setImageResource(R.drawable.painted_heart)
+                } else {
+                    binding.typeMainLike.setImageResource(R.drawable.heart)
+                }
+            }
+        }
+
+        val like = binding.typeMainLike
+    }
+
     fun replace(newList: MutableList<UserDataModel>) {
         notifyDataSetChanged()
     }
-    fun makePhoneCall(context : Context, position: Int) {
+
+    fun makePhoneCall(context: Context, position: Int) {
         val phoneNumber = list[position].ph
         // 전화를 걸기 위한 Intent를 생성
         val intent = Intent(Intent.ACTION_CALL)
@@ -110,35 +157,23 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
             ActivityCompat.requestPermissions(
                 context as Activity, // context를 Activity로 캐스팅
                 arrayOf(android.Manifest.permission.CALL_PHONE),
-                CALL_PHONE_PERMISSION_REQUEST_CODE)
+                CALL_PHONE_PERMISSION_REQUEST_CODE
+            )
         }
     }
+
     fun addItem(phoneNumberModel: UserDataModel, position: Int) {
         if (position >= 0 && position <= list.size) {
             list.add(position, phoneNumberModel)
             notifyItemInserted(position)
         }
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return if(position%2 ==0){
+            ViewType.leftType
+        }else{
+            ViewType.rightType
+        }
     }
-//class SwipeViewHolder(private val binding: ItemSwipeBinding) : RecyclerView.ViewHolder(binding.root) {
-//
-//    companion object{
-//        fun from(parent: ViewGroup): SwipeViewHolder {
-//            val inflater = LayoutInflater.from(parent.context)
-//            val binding = DataBindingUtil.inflate<ItemSwipeBinding>(
-//                inflater,
-//                R.layout.item_swipe,
-//                parent,
-//                false
-//            )
-//            return SwipeViewHolder(binding)
-//        }
-//    }
-//    fun bind(label: String) {
-//        binding.label = label
-//        // 테스크 버튼 클릭시 SnackBar 표시
-//        binding.task.setOnClickListener {
-//            Snackbar.make(it, "$label click", Snackbar.LENGTH_SHORT).show()
-//        }
-//    }
-//}
+}
