@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val tabList = listOf("ContactList", "Favorites", "MyPage")
 
-    private lateinit var selectedUri: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

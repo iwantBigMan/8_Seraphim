@@ -4,8 +4,13 @@
 
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.DIAL_PHONE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,6 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ContactProject"
         tools:targetApi="31">
+
         <activity
             android:name=".detailPage.ContactDetailActivity"
             android:exported="true">
