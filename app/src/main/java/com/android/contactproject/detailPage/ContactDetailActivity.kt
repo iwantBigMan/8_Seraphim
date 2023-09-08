@@ -24,9 +24,10 @@ class ContactDetailActivity : AppCompatActivity() {
             binding.name2.text = "${userData.name}"
             binding.number.text = "${userData.ph}"
         }
-
-
-
-
+        binding.back.setOnClickListener {
+            finish()
+        }
     }
 }
+
+
