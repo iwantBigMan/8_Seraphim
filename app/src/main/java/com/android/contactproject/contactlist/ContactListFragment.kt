@@ -273,7 +273,6 @@ class ContactListFragment : Fragment() {
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Phone.NUMBER
         )
-
         val cursor: Cursor? = requireContext().contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             projection,
@@ -281,7 +280,6 @@ class ContactListFragment : Fragment() {
             null,
             null
         )
-
         cursor?.use { cursor ->
             val nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
             val phoneNumberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
@@ -296,7 +294,6 @@ class ContactListFragment : Fragment() {
 
                 updatedList.add(userData) // 업데이트된 리스트에 아이템 추가
             }
-
 
             list.addAll(updatedList) // 새로운 데이터로 업데이트
 
