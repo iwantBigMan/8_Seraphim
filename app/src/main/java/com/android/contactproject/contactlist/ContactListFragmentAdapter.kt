@@ -145,7 +145,7 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
         val intent = Intent(Intent.ACTION_CALL)
         intent.data = Uri.parse("tel:$phoneNumber")
 
-        // CALL_PHONE 권한이 있는지 확인
+        // CALL_PHONE 권한이 있는지 확인 DialogInterface.BUTTON_POSITIVE
         if (ContextCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.CALL_PHONE
