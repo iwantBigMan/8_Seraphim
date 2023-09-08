@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.AddMemberData
 import com.android.contactproject.R
-import com.android.contactproject.SwipeToDeleteCallback
+//import com.android.contactproject.SwipeToDeleteCallback
 import com.android.contactproject.databinding.ContactListFragmentBinding
 import com.android.contactproject.detailPage.ContactDetailActivity
 import org.w3c.dom.Text
@@ -258,8 +258,8 @@ class ContactListFragment : Fragment() {
         listAdapter.replace(list)
         contactListRe.setHasFixedSize(true)
         // ItemTouchHelper를 초기화하고 RecyclerView에 연결
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(requireContext(), listAdapter))
-        itemTouchHelper.attachToRecyclerView(contactListRe)
+        //val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(requireContext(), listAdapter))
+        //itemTouchHelper.attachToRecyclerView(contactListRe)
 
     }
 
