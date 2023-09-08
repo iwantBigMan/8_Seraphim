@@ -237,7 +237,6 @@ class ContactListFragment : Fragment() {
         }
         initView()
 
-
         binding.btnaddmember.setOnClickListener{
             if (!isContactDataLoaded){
                 Log.d("contact","btnaddmember isContactDataLoaded = $isContactDataLoaded")
@@ -261,6 +260,7 @@ class ContactListFragment : Fragment() {
         if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
             // 이미 권한이 허용된 경우 주소록 정보 가져오기
             fetchContacts()
+
         } else {
             // 권한 요청
             requestPermissions(arrayOf(permission), requestCode)
