@@ -117,16 +117,41 @@ class ContactListFragment : Fragment() {
         }
         _binding = ContactListFragmentBinding.inflate(inflater, container, false)
         list.apply {
-            add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",
-                "남궁현"))
-            add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",
-                "박준수"))
-            add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",
-                "남윤희"))
-            add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",
-                "이다민"))
-            add(UserDataModel(R.drawable.ic_baseline_supervised_user_circle_24,"010-2717-2038",
-                "박성수"))
+            add(UserDataModel(R.drawable.chaewon,"010-4165-8974",
+                "채원"))
+            add(UserDataModel(R.drawable.eunchae,"010-2717-2038",
+                "은채"))
+            add(UserDataModel(R.drawable.kazuha,"010-1230-4518",
+                "카즈하"))
+            add(UserDataModel(R.drawable.sakura,"010-2468-9510",
+                "사쿠라"))
+            add(UserDataModel(R.drawable.yunjin,"010-7833-2232",
+                "허윤진"))
+            add(UserDataModel(R.drawable.gaeul,"010-4467-2892",
+                "가을"))
+            add(UserDataModel(R.drawable.iseo,"010-6541-6672",
+                "이서"))
+            add(UserDataModel(R.drawable.ray,"010-6315-7632",
+                "레이"))
+            add(UserDataModel(R.drawable.wonyoung,"010-7777-7777",
+                "장원영"))
+            add(UserDataModel(R.drawable.yujin,"010-6547-1466",
+                "안유진"))
+            add(UserDataModel(R.drawable.winter,"010-9788-8564",
+                "윈터"))
+            add(UserDataModel(R.drawable.karina,"010-5436-1592",
+                "카리나"))
+            add(UserDataModel(R.drawable.eunbi,"010-6154-9511",
+                "권은비"))
+            add(UserDataModel(R.drawable.miyeon,"010-7750-0987",
+                "미연"))
+            add(UserDataModel(R.drawable.ugi,"010-6543-7782",
+                "우기"))
+            add(UserDataModel(R.drawable.yena,"010-2137-8224",
+                "최예나"))
+            add(UserDataModel(R.drawable.yuna,"010-3357-6669",
+                "유나"))
+
           }
         initView()
 
