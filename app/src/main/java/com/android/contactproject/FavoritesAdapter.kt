@@ -9,7 +9,8 @@ import com.android.contactproject.databinding.FavoritesAdapterBinding
 import com.android.contactproject.databinding.GridTypeItemBinding
 
 class FavoritesAdapter(
-    private val lesserafim:MutableList<UserDataModel>
+    private val lesserafim:MutableList<UserDataModel>,
+    private var viewType: Int
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface ItemClick {
@@ -53,17 +54,28 @@ class FavoritesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding = FavoritesAdapterBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent, false
-        )
-        return FavoritesAdapterHolder(binding)
+        val inflater = LayoutInflater.from(parent.context)
+        return if (viewType == listViewType) {
+            val binding = FavoritesAdapterBinding.inflate(inflater, parent, false)
+            FavoritesAdapterHolder(binding)
+        } else {
+            val binding = GridTypeItemBinding.inflate(inflater, parent, false)
+            FavoritesGridAdapterHolder(binding)
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder as FavoritesAdapterHolder
-        val member = lesserafim[position]
-        holder.bind(member)
+        if (holder is FavoritesAdapterHolder && viewType == listViewType) {
+            val member = lesserafim[position]
+            holder.bind(member)
+        } else if (holder is FavoritesGridAdapterHolder && viewType == gridViewType) {
+            val member = lesserafim[position]
+            holder.bind(member)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return viewType
     }
     companion object {
         const val listViewType = 1

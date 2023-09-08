@@ -33,12 +33,6 @@
         android:queryHint="검색어를 입력하세요"
         android:elevation="5dp"/>
 
-    <ListView
-        android:id="@+id/nameData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"/>
-
     <TextView
         android:id="@+id/favorites_title"
         android:layout_width="match_parent"
@@ -53,7 +47,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorites_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
 
 </LinearLayout>
