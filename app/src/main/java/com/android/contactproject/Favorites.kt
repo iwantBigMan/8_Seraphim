@@ -25,8 +25,9 @@ class Favorites : Fragment() {
         parentFragmentManager.setFragmentResultListener("ToFavoritesKey",this){key, result ->
             val lesserafim = result.getParcelableArrayList<UserDataModel>("ToFavorites")
             if(lesserafim !=null){
+                val sort_Lesserafim = ArrayList(lesserafim.sortedBy { it.name })
                 Log.d("ContactProjects","Favorites에서 받는 데이터: ${lesserafim}")
-                UpdataFavorites(lesserafim)
+                UpdataFavorites(sort_Lesserafim)
             }
         }
 
