@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.contactproject.contactlist.UserDataModel
 import com.android.contactproject.databinding.FavoritesAdapterBinding
+import com.android.contactproject.databinding.GridTypeItemBinding
 
 class FavoritesAdapter(
     private val lesserafim:MutableList<UserDataModel>
@@ -34,9 +35,18 @@ class FavoritesAdapter(
                 }
             }
         }
-
         val favorites = binding.favoritesFavorites
     }
+    inner class FavoritesGridAdapterHolder(private val binding:GridTypeItemBinding): RecyclerView
+    .ViewHolder(binding.root){
+        fun bind(member:UserDataModel) {
+            binding.apply {
+                GridName.text = member.name
+                GridProfile.setImageResource(member.userImage)
+            }
+        }
+    }
+
 
     override fun getItemCount(): Int {
         return lesserafim.size
@@ -54,5 +64,9 @@ class FavoritesAdapter(
         holder as FavoritesAdapterHolder
         val member = lesserafim[position]
         holder.bind(member)
+    }
+    companion object {
+        const val listViewType = 1
+        const val gridViewType = 2
     }
 }

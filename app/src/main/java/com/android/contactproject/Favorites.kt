@@ -15,6 +15,7 @@ import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.setFragmentResult
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.contactlist.UserDataModel
 import com.android.contactproject.databinding.FragmentFavoritesBinding
@@ -41,9 +42,11 @@ class Favorites : Fragment() {
             menu.setOnMenuItemClickListener {
                 when(it.itemId){
                     R.id.ListView ->{
+                        binding.favoritesRecyclerview.layoutManager = LinearLayoutManager(context)
                         true
                     }
                     R.id.GridView ->{
+                        binding.favoritesRecyclerview.layoutManager = GridLayoutManager(context, 4)
                         true
                     }
                     else -> false
