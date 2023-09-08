@@ -5,12 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.setFragmentResult
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.contactlist.UserDataModel
 import com.android.contactproject.databinding.FragmentFavoritesBinding
@@ -22,14 +27,43 @@ class Favorites : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        parentFragmentManager.setFragmentResultListener("ToFavoritesKey",this){key, result ->
+        parentFragmentManager.setFragmentResultListener("ToFavoritesKey", this) { key, result ->
             val lesserafim = result.getParcelableArrayList<UserDataModel>("ToFavorites")
-            if(lesserafim !=null){
+
+            if (lesserafim != null) {
                 val sort_Lesserafim = ArrayList(lesserafim.sortedBy { it.name })
-                Log.d("ContactProjects","Favorites에서 받는 데이터: ${lesserafim}")
-                UpdataFavorites(sort_Lesserafim)
+                binding.favoritesRecyclerview.layoutManager =
+                    LinearLayoutManager(context)
+                UpdataFavorites(sort_Lesserafim, FavoritesAdapter.listViewType)
+                Log.d("ContactProjects", "Favorites에서 받는 데이터: ${lesserafim}")
+                binding.favoritesSelect.setOnClickListener {
+                    val menu = PopupMenu(context, it)
+                    menu.menuInflater.inflate(R.menu.menu, menu.menu)
+                    menu.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.ListView -> {
+                                binding.favoritesRecyclerview.layoutManager =
+                                    LinearLayoutManager(context)
+                                UpdataFavorites(sort_Lesserafim, FavoritesAdapter.listViewType)
+                                true
+                            }
+
+                            R.id.GridView -> {
+                                binding.favoritesRecyclerview.layoutManager =
+                                    GridLayoutManager(context, 3)
+                                UpdataFavorites(sort_Lesserafim, FavoritesAdapter.gridViewType)
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                    menu.show()
+                }
+
             }
         }
+
 
         val searchView = binding.favoritesSearchView
 
@@ -47,9 +81,10 @@ class Favorites : Fragment() {
 
         return binding.root
     }
-    fun UpdataFavorites(lesserafim : ArrayList<UserDataModel>){
+
+    fun UpdataFavorites(lesserafim: ArrayList<UserDataModel>, viewType: Int) {
         binding.favoritesRecyclerview.apply {
-            adapter = FavoritesAdapter(lesserafim).apply {
+            adapter = FavoritesAdapter(lesserafim, viewType).apply {
                 itemClick = object : FavoritesAdapter.ItemClick {
 
                     override fun onFavoritesClick(view: View, position: Int) {
@@ -72,8 +107,11 @@ class Favorites : Fragment() {
                                                 notifyItemRemoved(position)
 
                                                 val bundle = Bundle()
-                                                bundle.putParcelableArrayList("ToContactList", lesserafimList)
-                                                setFragmentResult("ToContactListKey",bundle)
+                                                bundle.putParcelableArrayList(
+                                                    "ToContactList",
+                                                    lesserafimList
+                                                )
+                                                setFragmentResult("ToContactListKey", bundle)
                                             }
                                         }
 
@@ -91,7 +129,6 @@ class Favorites : Fragment() {
                     }
                 }
             }
-            layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
         }
     }
