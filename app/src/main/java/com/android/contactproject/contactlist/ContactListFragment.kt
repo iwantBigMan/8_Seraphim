@@ -37,7 +37,7 @@ class ContactListFragment : Fragment() {
                   val builder = AlertDialog.Builder(requireContext())
                   builder.setTitle("즐겨찾기")
                   builder.setMessage("즐겨찾기를 하시겠읍니까?")
-
+                Log.d("ContactProjects","되돌아왔을떄 데이터 : ${item}")
                   val listener = object : DialogInterface.OnClickListener {
                       override fun onClick(dialog: DialogInterface?, which: Int) {
                           when (which) {
@@ -46,10 +46,10 @@ class ContactListFragment : Fragment() {
                                   if(item.isLike){
                                       list.removeAt(position)
                                       list.add(0, item)
-                                      listArray.add(item)
+                                      if (!listArray.contains(item)) {
+                                          listArray.add(item)
+                                      }
                                   }else{
-                                      list.removeAt(position)
-                                      list.add(item)
                                       listArray.remove(item)
                                   }
                                   notifyDataSetChanged()
