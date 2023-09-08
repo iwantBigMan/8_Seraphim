@@ -17,7 +17,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,9 +28,8 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 
 class AddContactDialogFragment : DialogFragment() {
-    private val binding by lazy{ FragmentAddContactDialogBinding.inflate(layoutInflater)}
-    lateinit var addMemberResult : ActivityResultLauncher<Intent>
-    private lateinit var addMember : LinearLayout
+    private val binding by lazy { FragmentAddContactDialogBinding.inflate(layoutInflater) }
+    lateinit var addMemberResult: ActivityResultLauncher<Intent>
     private var uri: Uri? = null
 
     private val handler = Handler(Looper.getMainLooper())
@@ -77,9 +75,11 @@ class AddContactDialogFragment : DialogFragment() {
                 dismiss()
             }
         }
-        addMemberResult = registerForActivityResult(ActivityResultContracts
-            .StartActivityForResult()){
-            if(it.resultCode == RESULT_OK && it.data !=null){
+        addMemberResult = registerForActivityResult(
+            ActivityResultContracts
+                .StartActivityForResult()
+        ) {
+            if (it.resultCode == RESULT_OK && it.data != null) {
                 uri = it.data!!.data
 
                 Glide.with(this)
@@ -248,38 +248,38 @@ class AddContactDialogFragment : DialogFragment() {
         return binding.root
     }
 
-        private fun reservationNotification(name: String) {
-            val notificationManager =
-                binding.root.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val intent = Intent(binding.root.context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(
-                binding.root.context,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    private fun reservationNotification(name: String) {
+        val notificationManager =
+            binding.root.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val intent = Intent(binding.root.context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            binding.root.context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // 알림 채널 생성
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "channel_id",
+                "Channel Name",
+                NotificationManager.IMPORTANCE_DEFAULT
             )
-
-            // 알림 채널 생성
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(
-                    "channel_id",
-                    "Channel Name",
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-                notificationManager.createNotificationChannel(channel)
-            }
-
-            // 알림 생성
-            val notification = NotificationCompat.Builder(binding.root.context, "channel_id")
-                .setContentTitle("\uD83D\uDEA8 8_Sheraphim 알림 \uD83D\uDEA8")
-                .setContentText("$name 님이 연락을 기다리고 있어요...")
-                .setSmallIcon(R.drawable.bell) // 알림 아이콘 설정
-                // 알림 터치 시 제거
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .build()
-
-            // 알림 표시
-            notificationManager.notify(1, notification) // 고유한 ID를 지정하여 알림을 구별
+            notificationManager.createNotificationChannel(channel)
         }
+
+        // 알림 생성
+        val notification = NotificationCompat.Builder(binding.root.context, "channel_id")
+            .setContentTitle("\uD83D\uDEA8 8_Sheraphim 알림 \uD83D\uDEA8")
+            .setContentText("$name 님이 연락을 기다리고 있어요...")
+            .setSmallIcon(R.drawable.bell) // 알림 아이콘 설정
+            // 알림 터치 시 제거
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        // 알림 표시
+        notificationManager.notify(1, notification) // 고유한 ID를 지정하여 알림을 구별
+    }
 }
