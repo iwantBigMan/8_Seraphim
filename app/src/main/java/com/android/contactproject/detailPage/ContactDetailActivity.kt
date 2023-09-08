@@ -2,11 +2,8 @@ package com.android.contactproject.detailPage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.service.autofill.UserData
-import com.android.contactproject.R
 import com.android.contactproject.contactlist.UserDataModel
 import com.android.contactproject.databinding.ActivityContactDetailBinding
-import com.android.contactproject.databinding.ActivityMainBinding
 
 class ContactDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityContactDetailBinding
@@ -25,8 +22,9 @@ class ContactDetailActivity : AppCompatActivity() {
             binding.number.text = "${userData.ph}"
         }
 
-
-
+        binding.back.setOnClickListener{
+            finish()
+        }
 
     }
 }
