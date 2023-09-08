@@ -5,9 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.setFragmentResult
@@ -30,6 +34,24 @@ class Favorites : Fragment() {
                 UpdataFavorites(sort_Lesserafim)
             }
         }
+        binding.favoritesSelect.setOnClickListener {
+            val menu = PopupMenu(context,it)
+            menu.menuInflater.inflate(R.menu.menu,menu.menu)
+
+            menu.setOnMenuItemClickListener {
+                when(it.itemId){
+                    R.id.ListView ->{
+                        true
+                    }
+                    R.id.GridView ->{
+                        true
+                    }
+                    else -> false
+                }
+            }
+            menu.show()
+        }
+
 
         val searchView = binding.favoritesSearchView
 
