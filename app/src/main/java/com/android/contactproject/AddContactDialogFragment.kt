@@ -1,5 +1,6 @@
 package com.android.contactproject
 
+import android.app.Activity.NOTIFICATION_SERVICE
 import android.app.Activity.RESULT_OK
 import android.app.AlarmManager
 import android.app.NotificationChannel
@@ -7,7 +8,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
+import android.graphics.BitmapFactory
+import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,8 +23,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,9 +38,9 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 
 class AddContactDialogFragment : DialogFragment() {
-    private val binding by lazy { FragmentAddContactDialogBinding.inflate(layoutInflater) }
-    lateinit var addMemberResult: ActivityResultLauncher<Intent>
-    private lateinit var addMember: LinearLayout
+    private val binding by lazy{ FragmentAddContactDialogBinding.inflate(layoutInflater)}
+    lateinit var addMemberResult : ActivityResultLauncher<Intent>
+    private lateinit var addMember : LinearLayout
     private var uri: Uri? = null
 
     private val handler = Handler(Looper.getMainLooper())
@@ -83,11 +86,9 @@ class AddContactDialogFragment : DialogFragment() {
                 dismiss()
             }
         }
-        addMemberResult = registerForActivityResult(
-            ActivityResultContracts
-                .StartActivityForResult()
-        ) {
-            if (it.resultCode == RESULT_OK && it.data != null) {
+        addMemberResult = registerForActivityResult(ActivityResultContracts
+            .StartActivityForResult()){
+            if(it.resultCode == RESULT_OK && it.data !=null){
                 uri = it.data!!.data
 
                 Glide.with(this)
