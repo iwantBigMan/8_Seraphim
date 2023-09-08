@@ -15,7 +15,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
-import com.android.contactproject.databinding.ActivityAddContactDialogBinding
 import com.android.contactproject.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
