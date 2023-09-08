@@ -34,7 +34,7 @@ class Favorites : Fragment() {
                 val sort_Lesserafim = ArrayList(lesserafim.sortedBy { it.name })
                 binding.favoritesRecyclerview.layoutManager =
                     LinearLayoutManager(context)
-                UpdataFavorites(sort_Lesserafim, FavoritesAdapter.listViewType)
+                UpdataFavorites(lesserafim, FavoritesAdapter.listViewType)
                 Log.d("ContactProjects", "Favorites에서 받는 데이터: ${lesserafim}")
                 binding.favoritesSelect.setOnClickListener {
                     val menu = PopupMenu(context, it)
@@ -44,14 +44,20 @@ class Favorites : Fragment() {
                             R.id.ListView -> {
                                 binding.favoritesRecyclerview.layoutManager =
                                     LinearLayoutManager(context)
-                                UpdataFavorites(sort_Lesserafim, FavoritesAdapter.listViewType)
+                                UpdataFavorites(lesserafim, FavoritesAdapter.listViewType)
                                 true
                             }
 
                             R.id.GridView -> {
                                 binding.favoritesRecyclerview.layoutManager =
                                     GridLayoutManager(context, 3)
-                                UpdataFavorites(sort_Lesserafim, FavoritesAdapter.gridViewType)
+                                UpdataFavorites(lesserafim, FavoritesAdapter.gridViewType)
+                                true
+                            }
+                            R.id.Sort -> {
+                                binding.favoritesRecyclerview.layoutManager =
+                                    LinearLayoutManager(context)
+                                UpdataFavorites(sort_Lesserafim, FavoritesAdapter.listViewType)
                                 true
                             }
 

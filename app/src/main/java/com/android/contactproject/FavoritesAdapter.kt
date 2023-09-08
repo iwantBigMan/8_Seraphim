@@ -78,7 +78,7 @@ class FavoritesAdapter(
         return viewType
     }
     companion object {
-        const val listViewType = 1
-        const val gridViewType = 2
+        val listViewType = 2
+        val gridViewType = 3
     }
 }
