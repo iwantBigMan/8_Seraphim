@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide
 class MyPageFragment : Fragment() {
     private lateinit var binding: FragmentMyPageBinding
     private var selectedImageUri: Uri? = null
+    private lateinit var v1: View
 
 
     private val REQUEST_CODE_PICK_IMAGE = 101
@@ -26,14 +27,13 @@ class MyPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentMyPageBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
-
 
         binding.myImage.setImageResource(R.drawable.jisoo)
         binding.myName.text = "다민님바보"
@@ -41,7 +41,8 @@ class MyPageFragment : Fragment() {
         binding.myEvent.text = "5분뒤 알림"
 
         binding.btnRevise.setOnClickListener {
-            val v1 = layoutInflater.inflate(R.layout.mypage_revise_dialog, null)
+             v1 = layoutInflater.inflate(R.layout.mypage_revise_dialog, null)
+
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle("내정보 수정")
                 .setView(v1)
@@ -63,6 +64,13 @@ class MyPageFragment : Fragment() {
             val btnAccept = v1.findViewById<Button>(R.id.dialog_acceptbtn)
             val btnCancel = v1.findViewById<Button>(R.id.dialog_cancelbtn)
 
+            if (selectedImageUri != null) {
+                Glide.with(this)
+                    .load(selectedImageUri)
+                    .into(setimage)
+            }
+
+
             btnAccept.setOnClickListener {
 
                 val editTextName = v1.findViewById<EditText>(R.id.dialog_name2)
@@ -72,17 +80,16 @@ class MyPageFragment : Fragment() {
                 val newPhoneNumber = editTextPhoneNumber.text.toString()
                 val newEvent = editTextEvent.text.toString()
 
+
+                binding.myName.text = newName
+                binding.myMobile.text = newPhoneNumber
+                binding.myEvent.text = newEvent
+
                 if (selectedImageUri != null) {
                     Glide.with(this)
                         .load(selectedImageUri)
                         .into(binding.myImage)
                 }
-
-
-
-                binding.myName.text = newName
-                binding.myMobile.text = newPhoneNumber
-                binding.myEvent.text = newEvent
 
                 dialog.dismiss()
             }
@@ -103,22 +110,12 @@ class MyPageFragment : Fragment() {
             val uri = data?.data
             if (uri != null) {
                 selectedImageUri = uri
-                val v1 = layoutInflater.inflate(R.layout.mypage_revise_dialog, null)
-                val setimage = v1.findViewById<ImageView>(R.id.dialog_image2)
+                             val setimage = v1.findViewById<ImageView>(R.id.dialog_image2)
+                Glide.with(this)
+                    .load(selectedImageUri)
+                    .into(setimage)
 
             }
         }
     }
-
-
-//    private fun getRealPathFromURI(uri: Uri): String? {
-//        val projection = arrayOf(MediaStore.Images.Media.DATA)
-//        val cursor = requireContext().contentResolver.query(uri, projection, null, null, null)
-//        val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-//        cursor?.moveToFirst()
-//        val filePath = cursor?.getString(columnIndex ?: -1)
-//        cursor?.close()
-//        return filePath
-//    }
-
-}
+    }
