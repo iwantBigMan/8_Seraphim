@@ -10,9 +10,11 @@
         android:id="@+id/contact_list_re"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:listitem="@layout/contact_list_item"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/contact_list_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnaddmember"
@@ -21,6 +23,8 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:clickable="true"
+        android:backgroundTint="@color/black"
+        app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />

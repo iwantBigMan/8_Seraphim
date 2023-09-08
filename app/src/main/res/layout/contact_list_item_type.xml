@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="140dp">
+    android:layout_height="140dp"
+    android:background="@color/Gray200">
 
     <ImageView
         android:id="@+id/type_main_like"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginStart="30dp"
         android:scaleType="fitXY"
         android:src="@drawable/heart"
-        android:layout_marginStart="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,9 +20,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end"
         android:layout_marginEnd="20dp"
+        android:gravity="end"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/type_iconCardView"
         app:layout_constraintTop_toTopOf="parent">
@@ -41,8 +42,9 @@
             android:id="@+id/type_ph_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:layout_marginTop="10dp"
             android:text="@string/phoneNumber"
+            android:textSize="20dp"
             android:textStyle="bold|italic" />
     </LinearLayout>
 
@@ -65,7 +67,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.cardview.widget.CardView>
 
     <View
