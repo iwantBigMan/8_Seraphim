@@ -1,10 +1,12 @@
 package com.android.contactproject
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +16,8 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.android.contactproject.databinding.ActivityAddContactDialogBinding
 import com.android.contactproject.databinding.ActivityMainBinding
@@ -33,32 +37,33 @@ class MainActivity : AppCompatActivity() {
             tab.text = tabList[position]
         }.attach()
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            var currentState = 0
-            var currentPosition = 0
 
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                if (currentState == ViewPager2.SCROLL_STATE_DRAGGING && currentPosition == position) {
-                    if (currentPosition == 0) binding.viewPager.currentItem = 2
-                    else if (currentPosition == 2) binding.viewPager.currentItem = 0
-                }
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-            }
-
-            override fun onPageSelected(position: Int) {
-                currentPosition = position
-                super.onPageSelected(position)
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-                currentState = state
-                super.onPageScrollStateChanged(state)
-            }
-        })
+//        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+//            var currentState = 0
+//            var currentPosition = 0
+//
+//            override fun onPageScrolled(
+//                position: Int,
+//                positionOffset: Float,
+//                positionOffsetPixels: Int
+//            ) {
+//                if (currentState == ViewPager2.SCROLL_STATE_DRAGGING && currentPosition == position) {
+//                    if (currentPosition == 0) binding.viewPager.currentItem = 2
+//                    else if (currentPosition == 2) binding.viewPager.currentItem = 0
+//                }
+//                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+//            }
+//
+//            override fun onPageSelected(position: Int) {
+//                currentPosition = position
+//                super.onPageSelected(position)
+//            }
+//
+//            override fun onPageScrollStateChanged(state: Int) {
+//                currentState = state
+//                super.onPageScrollStateChanged(state)
+//            }
+//        })
 
         // 플로팅 버튼 클릭시
 //        binding.btnaddmember.setOnClickListener {
@@ -68,7 +73,6 @@ class MainActivity : AppCompatActivity() {
 //            click.show()
 //        }
     }
-
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        super.onActivityResult(requestCode, resultCode, data)
 //

@@ -1,16 +1,23 @@
 package com.android.contactproject.contactlist
 
 
+import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +32,7 @@ import com.android.contactproject.detailPage.ContactDetailActivity
 class ContactListFragment : Fragment() {
 
      private var list = mutableListOf<UserDataModel>()
-
+    private var isContactDataLoaded = false
     private var _binding: ContactListFragmentBinding? = null
     private val binding get() = _binding!!
     val listArray = arrayListOf<UserDataModel>()
@@ -160,12 +167,98 @@ class ContactListFragment : Fragment() {
         initView()
 
         binding.btnaddmember.setOnClickListener{
+            if (!isContactDataLoaded){
+                Log.d("contact","btnaddmember isContactDataLoaded = $isContactDataLoaded")
+                requestContactsPermission()
+
+            }
+            else{
+                refreshContactList()
+            }
             val popUp = AddContactDialogFragment()
             popUp.show((activity as AppCompatActivity).supportFragmentManager, "popUp")
         }
         return binding.root
     }
+    //주소록 읽기 권한 요청
+    private fun requestContactsPermission() {
+        val permission = Manifest.permission.READ_CONTACTS
+        val requestCode = 101
 
+        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+            // 이미 권한이 허용된 경우 주소록 정보 가져오기
+            fetchContacts()
+        } else {
+            // 권한 요청
+            requestPermissions(arrayOf(permission), requestCode)
+        }
+    }
+
+    // 주소로 데이터 가져오기
+    private fun fetchContacts() {
+        val projection = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        )
+
+        val cursor: Cursor? = requireContext().contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            projection,
+            null,
+            null,
+            null
+        )
+
+        cursor?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+            val phoneNumberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+
+            val updatedList = mutableListOf<UserDataModel>() // 업데이트된 리스트 생성
+
+            while (cursor.moveToNext()) {
+                val name = cursor.getString(nameIndex)
+                val phoneNumber = cursor.getString(phoneNumberIndex)
+
+                val userData = UserDataModel(0, phoneNumber, name, false)
+
+                updatedList.add(userData) // 업데이트된 리스트에 아이템 추가
+            }
+
+
+            list.addAll(updatedList) // 새로운 데이터로 업데이트
+
+            // 데이터를 불러왔으므로 플래그 업데이트
+            isContactDataLoaded = true
+
+            // 새로고침 수행
+            refreshContactList()
+        }
+    }
+    private fun refreshContactList() {
+        // RecyclerView 갱신 로직 추가
+        listAdapter.notifyDataSetChanged()
+    }
+
+    //권한 요청 다이얼로그 응답시 수행하는코드
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        Log.d("contact","requestCode = $requestCode")
+        when (requestCode) {
+            101 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("contact","PERMISSION_GRANTED")// 사용자가 권한을 허용한 경우 주소록 정보 가져오기
+                    fetchContacts()
+                    refreshContactList() // 화면 새로고침
+                } else {
+                    //거부하면 메세지 출력
+                    Toast.makeText(requireContext(), "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
 
     private fun initView() = with(binding) {
