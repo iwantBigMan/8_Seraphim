@@ -271,7 +271,7 @@ class AddContactDialogFragment : DialogFragment() {
 
             // 알림 생성
             val notification = NotificationCompat.Builder(binding.root.context, "channel_id")
-                .setContentTitle("8_Sheraphim 알림 !!")
+                .setContentTitle("\uD83D\uDEA8 8_Sheraphim 알림 \uD83D\uDEA8")
                 .setContentText("$name 님이 연락을 기다리고 있어요...")
                 .setSmallIcon(R.drawable.bell) // 알림 아이콘 설정
                 // 알림 터치 시 제거
