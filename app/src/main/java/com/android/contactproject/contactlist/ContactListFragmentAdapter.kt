@@ -17,7 +17,7 @@ import com.android.contactproject.databinding.ContactListItemBinding
 
 
 class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : RecyclerView
-.Adapter<ContactListFragmentAdapter.ViewHolder>
+.Adapter<ContactListFragmentAdapter.ContactViewHolder>
     () {
 
     interface ItemClick {
@@ -45,21 +45,21 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
         return list.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
+        return ContactViewHolder(
             ContactListItemBinding.inflate(LayoutInflater.from(parent.context))
         )
     }
 
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val item = list[position]
         holder.bind(item)
 
 
     }
 
-    inner class ViewHolder(
+    inner class ContactViewHolder(
         private val binding: ContactListItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: UserDataModel) = with(binding) {
@@ -120,3 +120,25 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
         }
     }
     }
+//class SwipeViewHolder(private val binding: ItemSwipeBinding) : RecyclerView.ViewHolder(binding.root) {
+//
+//    companion object{
+//        fun from(parent: ViewGroup): SwipeViewHolder {
+//            val inflater = LayoutInflater.from(parent.context)
+//            val binding = DataBindingUtil.inflate<ItemSwipeBinding>(
+//                inflater,
+//                R.layout.item_swipe,
+//                parent,
+//                false
+//            )
+//            return SwipeViewHolder(binding)
+//        }
+//    }
+//    fun bind(label: String) {
+//        binding.label = label
+//        // 테스크 버튼 클릭시 SnackBar 표시
+//        binding.task.setOnClickListener {
+//            Snackbar.make(it, "$label click", Snackbar.LENGTH_SHORT).show()
+//        }
+//    }
+//}
