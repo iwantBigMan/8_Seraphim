@@ -240,6 +240,11 @@ class AddContactDialogFragment : DialogFragment() {
                         btn30m -> handler.postDelayed({ reservationNotification(inputName) }, 30000)
                     }
                 }
+                val bundle = Bundle()
+                //bundle.getInt("image", selected)
+                bundle.getString("name", name.text.toString())
+                bundle.getString("phone", phone.text.toString())
+                bundle.getString("email", address.text.toString())
                 dismiss()
             } else {
                 Toast.makeText(context, "형식에 맞지 않은 정보가 존재합니다.", Toast.LENGTH_SHORT).show()

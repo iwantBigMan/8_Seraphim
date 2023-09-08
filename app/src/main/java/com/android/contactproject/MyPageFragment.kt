@@ -1,5 +1,6 @@
 package com.android.contactproject
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -40,6 +41,21 @@ class MyPageFragment : Fragment() {
         return binding.root
     }
 
+    //위에 startActivityForResult로 시작된 액티비티가 종료 후 돌아올 때 호출
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+            //이미지의 Uri를 가져온다.
+            val uri = data?.data
+            if (uri != null) {
+                selectedImageUri = uri
+                val v1 = layoutInflater.inflate(R.layout.mypage_revise_dialog, null)
+                val setimage = v1.findViewById<ImageView>(R.id.dialog_image2)
+                setimage.setImageURI(selectedImageUri)
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -55,6 +71,8 @@ class MyPageFragment : Fragment() {
                 .setView(v1)
                 .create()
             val setimage = v1.findViewById<ImageView>(R.id.dialog_image2)
+
+            dialog.show()
 
             setimage.setOnClickListener {
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT) //  다른 앱에서 저장한 파일을 열 수 있는 Intent
@@ -80,9 +98,11 @@ class MyPageFragment : Fragment() {
                     Glide.with(this)
                         .load(selectedImageUri)
                         .into(binding.myImage)
+                    Glide.with(this)
+                        .load(selectedImageUri)
+                        .into(setimage)
                 }
             }
-            dialog.show()
 
             val editTextName = v1.findViewById<EditText>(R.id.dialog_name2)
             val editTextPhoneNumber = v1.findViewById<EditText>(R.id.dialog_phone2)
@@ -112,7 +132,10 @@ class MyPageFragment : Fragment() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     val englishPattern = Regex("^[a-zA-Z]{4,}\$")
                     val koreanPattern = Regex("^[가-힣]{2,}\$")
-                    if (englishPattern.matches(editTextName.text) || koreanPattern.matches(editTextName.text)) {
+                    if (englishPattern.matches(editTextName.text) || koreanPattern.matches(
+                            editTextName.text
+                        )
+                    ) {
                         editTextName.error = null
                         nameCheck = true
                     } else {
@@ -196,10 +219,9 @@ class MyPageFragment : Fragment() {
                 // 빠른 event 테스트 확인을 위해 잠시 주석 처리함 --------> 완전한 사용시 주석 해제 필요
                 //if (nameCheck && phoneCheck && selectedBtn != null) {
                 if (selectedBtn != null) {
-                    if(selectedBtn == btnOff) {
+                    if (selectedBtn == btnOff) {
                         newEvent = "알림 OFF"
-                    }
-                    else {
+                    } else {
                         val inputName = editTextName.text.toString()
                         when (selectedBtn) {
                             // 5분일 경우
@@ -209,18 +231,21 @@ class MyPageFragment : Fragment() {
                                 handler.postDelayed({ reservationNotification(inputName) }, 5000)
                                 newEvent = "5분 뒤 알림"
                             }
+
                             btn10m -> {
                                 handler.postDelayed({ reservationNotification(inputName) }, 10000)
                                 newEvent = "10분 뒤 알림"
                             }
+
                             btn30m -> {
                                 handler.postDelayed({ reservationNotification(inputName) }, 30000)
                                 newEvent = "30분 뒤 알림"
                             }
                         }
                     }
-                    binding.myEvent.text = newEvent
                     dialog.dismiss()
+                    binding.myEvent.text = newEvent
+                    binding.myImage.setImageURI(selectedImageUri)
                 }
             }
             //취소버튼 클릭 시
@@ -229,6 +254,8 @@ class MyPageFragment : Fragment() {
             }
         }
     }
+
+
     private fun reservationNotification(name: String) {
         val notificationManager =
             binding.root.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -264,31 +291,3 @@ class MyPageFragment : Fragment() {
         notificationManager.notify(1, notification) // 고유한 ID를 지정하여 알림을 구별
     }
 }
-
-/*        //위에 startActivityForResult로 시작된 액티비티가 종료 후 돌아올 때 호출
-        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            super.onActivityResult(requestCode, resultCode, data)
-            if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-                //이미지의 Uri를 가져온다.
-                val uri = data?.data
-                if (uri != null) {
-                    selectedImageUri = uri
-                    val v1 = layoutInflater.inflate(R.layout.mypage_revise_dialog, null)
-                    val setimage = v1.findViewById<ImageView>(R.id.dialog_image2)
-                    setimage.setImageURI(selectedImageUri)
-                }
-            }
-        }
-    }*/
-
-
-
-//    private fun getRealPathFromURI(uri: Uri): String? {
-//        val projection = arrayOf(MediaStore.Images.Media.DATA)
-//        val cursor = requireContext().contentResolver.query(uri, projection, null, null, null)
-//        val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-//        cursor?.moveToFirst()
-//        val filePath = cursor?.getString(columnIndex ?: -1)
-//        cursor?.close()
-//        return filePath
-//    }
