@@ -44,8 +44,12 @@ class ContactListFragment : Fragment() {
                               DialogInterface.BUTTON_POSITIVE -> {
                                  item.isLike = !item.isLike
                                   if(item.isLike){
+                                      list.removeAt(position)
+                                      list.add(0, item)
                                       listArray.add(item)
                                   }else{
+                                      list.removeAt(position)
+                                      list.add(item)
                                       listArray.remove(item)
                                   }
                                   notifyDataSetChanged()
