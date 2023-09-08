@@ -1,25 +1,18 @@
 package com.android.contactproject
 
-import android.app.Activity.NOTIFICATION_SERVICE
 import android.app.Activity.RESULT_OK
-import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.media.AudioAttributes
-import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +22,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.android.contactproject.databinding.FragmentAddContactDialogBinding
@@ -234,7 +225,7 @@ class AddContactDialogFragment : DialogFragment() {
         }
         // 확인 버튼 클릭 시
         binding.dialogAcceptbtn.setOnClickListener {
-            // 빠른 event 테스트 확인을 위해 잠시 주석 처리함
+            // 빠른 event 테스트 확인을 위해 잠시 주석 처리함 --------> 완전한 사용시 주석 해제 필요
             //if (nameCheck && phoneCheck && addressCheck && selectedBtn != null) {
             if (selectedBtn != null) {
                 if (selectedBtn != btnOff) {
@@ -268,7 +259,7 @@ class AddContactDialogFragment : DialogFragment() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            // 알림 채널 생성 (Android 8.0 이상에서 필요)
+            // 알림 채널 생성
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channel = NotificationChannel(
                     "channel_id",
