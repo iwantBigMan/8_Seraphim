@@ -241,6 +241,7 @@ class AddContactDialogFragment : DialogFragment() {
                         btn10m -> handler.postDelayed({ reservationNotification(inputName) }, 10000)
                         btn30m -> handler.postDelayed({ reservationNotification(inputName) }, 30000)
                     }
+
                 }
                 val bundle = Bundle()
                 val image = bundle.putInt("imageUri", binding.dialogImage.imageAlpha)
