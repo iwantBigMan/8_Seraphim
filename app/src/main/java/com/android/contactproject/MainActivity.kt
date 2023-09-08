@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.viewPager.adapter = ViewPagerAdapter(this)
 
-
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabList[position]
         }.attach()
