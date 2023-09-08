@@ -25,6 +25,7 @@ import androidx.core.app.NotificationCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.android.contactproject.databinding.FragmentAddContactDialogBinding
+import com.android.contactproject.detailPage.ContactDetailActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 
@@ -231,6 +232,7 @@ class AddContactDialogFragment : DialogFragment() {
                 if (selectedBtn != btnOff) {
                     val inputName = name.text.toString()
                     when (selectedBtn) {
+
                         // 5분일 경우
                         // btn5m -> handler.postDelayed({ reservationNotification(inputName) }, 5 * 60 * 1000)
 
@@ -239,12 +241,15 @@ class AddContactDialogFragment : DialogFragment() {
                         btn10m -> handler.postDelayed({ reservationNotification(inputName) }, 10000)
                         btn30m -> handler.postDelayed({ reservationNotification(inputName) }, 30000)
                     }
-
+                    // 디테일 페이지로 값을 넘겨줌
+                    val intent = Intent(context, ContactDetailActivity::class.java)
+                    intent.putExtra("Event",false)
                 }
                 dismiss()
             } else {
                 Toast.makeText(context, "형식에 맞지 않은 정보가 존재합니다.", Toast.LENGTH_SHORT).show()
             }
+
         }
         return binding.root
     }
@@ -258,7 +263,9 @@ class AddContactDialogFragment : DialogFragment() {
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+
             )
+
 
             // 알림 채널 생성
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
