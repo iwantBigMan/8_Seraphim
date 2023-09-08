@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import com.android.contactproject.contactlist.ContactListFragment
 import com.android.contactproject.databinding.FragmentAddContactDialogBinding
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -241,10 +243,15 @@ class AddContactDialogFragment : DialogFragment() {
                     }
                 }
                 val bundle = Bundle()
-                //bundle.getInt("image", selected)
-                bundle.getString("name", name.text.toString())
+                val image = bundle.putInt("imageUri", binding.dialogImage.imageAlpha)
+                val naming = bundle.getString("name", name.text.toString())
                 bundle.getString("phone", phone.text.toString())
                 bundle.getString("email", address.text.toString())
+
+                Log.d("put image" ,"$image")
+                Log.d("put name", "$naming")
+                ContactListFragment().arguments = bundle
+
                 dismiss()
             } else {
                 Toast.makeText(context, "형식에 맞지 않은 정보가 존재합니다.", Toast.LENGTH_SHORT).show()
