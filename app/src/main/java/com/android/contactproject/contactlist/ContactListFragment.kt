@@ -217,24 +217,24 @@ class ContactListFragment : Fragment() {
             val popUp = AddContactDialogFragment()
             popUp.show((activity as AppCompatActivity).supportFragmentManager, "popUp")
         }
-        initView()
+//        initView()
 
         return binding.root
     }
-    private fun initView() {
-        binding.contactListRe.layoutManager = LinearLayoutManager(context)
-        binding.contactListRe.adapter = listAdapter
-        listAdapter.replace(list)
-        binding.contactListRe.setHasFixedSize(true)
-
-        // ItemTouchHelper를 초기화하고 RecyclerView에 연결
-        val itemTouchHelper = ItemTouchHelper(SwipeToCall(requireContext(), listAdapter))
-        itemTouchHelper.attachToRecyclerView(binding.contactListRe)
-    }
+//    private fun initView() {
+//        binding.contactListRe.layoutManager = LinearLayoutManager(context)
+//        binding.contactListRe.adapter = listAdapter
+//        listAdapter.replace(list)
+//        binding.contactListRe.setHasFixedSize(true)
+//
+//        // ItemTouchHelper를 초기화하고 RecyclerView에 연결
+//        val itemTouchHelper = ItemTouchHelper(SwipeToCall(requireContext(), listAdapter))
+//        itemTouchHelper.attachToRecyclerView(binding.contactListRe)
+//    }
 
     fun UpdataContact(list: ArrayList<UserDataModel>, viewType: Int) {
         binding.contactListRe.apply {
-            listAdapter = ContactListFragmentAdapter(list, viewType).apply {
+            adapter = ContactListFragmentAdapter(list, viewType).apply {
                 itemClick = object : ContactListFragmentAdapter.ItemClick {
                     override fun onClick(view: View, position: Int) {
                         val item = list[position]
