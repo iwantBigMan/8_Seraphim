@@ -1,26 +1,23 @@
 package com.android.contactproject
 
-
-import android.app.Activity.NOTIFICATION_SERVICE
 import android.app.Activity.RESULT_OK
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.media.AudioAttributes
-import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,17 +26,26 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.android.contactproject.databinding.FragmentAddContactDialogBinding
 import com.bumptech.glide.Glide
-import com.google.android.material.snackbar.Snackbar
 
 class AddContactDialogFragment : DialogFragment() {
-    private val binding by lazy{ FragmentAddContactDialogBinding.inflate(layoutInflater)}
-    lateinit var addMemberResult : ActivityResultLauncher<Intent>
-    private lateinit var addMember : LinearLayout
+    private val binding by lazy { FragmentAddContactDialogBinding.inflate(layoutInflater) }
+    lateinit var addMemberResult: ActivityResultLauncher<Intent>
     private var uri: Uri? = null
+
+    private var inputName: String = ""
+
+    private val handler = Handler(Looper.getMainLooper())
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // 유효성 필드 완료 후 accept 버튼 활성화 시 필요
+        var imageCheck = false
+        var nameCheck = false
+        var phoneCheck = false
+        var addressCheck = false
+        var inputname: String
+
         val lesserafimList = ArrayList<AddMemberData>()
         binding.apply {
             imageButton.setOnClickListener {
@@ -47,44 +53,19 @@ class AddContactDialogFragment : DialogFragment() {
                 intent.type = "image/*"
                 addMemberResult.launch(intent)
             }
-            dialogAcceptbtn.setOnClickListener {
-                val name = dialogName.text.toString()
-                val phone = dialogPhone.text.toString()
-                val address = dialogAddress.text.toString()
-                if (name.isNotBlank() && phone.isNotBlank() && address.isNotBlank()) {
-                    if(uri != null){
-                        val profile = uri ?: return@setOnClickListener
-                        val lesserafim = AddMemberData(profile, name, phone, address)
-                        lesserafimList.add(lesserafim)
-                        val bundle = Bundle()
-                        bundle.putParcelableArrayList("FromDialog", lesserafimList)
-                        setFragmentResult("FromDialogKey", bundle)
-
-                        dismiss()
-                    }else{
-                        Snackbar.make(requireView(), "프로필 사진을 선택 해주세요.", Snackbar.LENGTH_SHORT).apply {
-                            anchorView = binding.dialogImage
-                        }
-                            .show()
-                    }
-                } else {
-                    Snackbar.make(requireView(), "정보를 모두 입력하세요.", Snackbar.LENGTH_SHORT).apply {
-                        anchorView = binding.dialogImage
-                    }.show()
-                }
-            }
-            dialogCancelbtn.setOnClickListener {
-                dismiss()
-            }
         }
-        addMemberResult = registerForActivityResult(ActivityResultContracts
-            .StartActivityForResult()){
-            if(it.resultCode == RESULT_OK && it.data !=null){
+        addMemberResult = registerForActivityResult(
+            ActivityResultContracts
+                .StartActivityForResult()
+        ) {
+            if (it.resultCode == RESULT_OK && it.data != null) {
                 uri = it.data!!.data
 
                 Glide.with(this)
                     .load(uri)
                     .into(binding.dialogImage)
+
+                imageCheck = true
             }
         }
 
@@ -96,13 +77,6 @@ class AddContactDialogFragment : DialogFragment() {
         val btn5m = binding.btn5m
         val btn10m = binding.btn10m
         val btn30m = binding.btn30m
-
-
-        // 유효성 필드 완료 후 accept 버튼 활성화 시 필요
-        var nameCheck = false
-        var phoneCheck = false
-        var addressCheck = false
-
 
         // name 텍스트 필드 유효성 검사
         name.addTextChangedListener(object : TextWatcher {
@@ -119,7 +93,6 @@ class AddContactDialogFragment : DialogFragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val englishPattern = Regex("^[a-zA-Z]{4,}\$")
                 val koreanPattern = Regex("^[가-힣]{2,}\$")
-
                 if (englishPattern.matches(name.text) || koreanPattern.matches(name.text)) {
                     name.error = null
                     nameCheck = true
@@ -225,9 +198,38 @@ class AddContactDialogFragment : DialogFragment() {
         }
         // 확인 버튼 클릭 시
         binding.dialogAcceptbtn.setOnClickListener {
-            if (nameCheck && phoneCheck && addressCheck && selectedBtn != null) {
-                ReservationNotification(requireContext())
-                // 입력한 데이터 전달
+            if (!imageCheck || selectedBtn == null) {
+                if (!imageCheck)
+                    Toast.makeText(context, "사진을 추가해주세요 !", Toast.LENGTH_SHORT).show()
+                if (selectedBtn == null)
+                    Toast.makeText(context, "알림 버튼을 설정해주세요 !", Toast.LENGTH_SHORT).show()
+            }
+            // 빠른 event 테스트 확인을 위해 잠시 주석 처리함 --------> 완전한 사용시 주석 해제 필요
+            //else if (imageCheck && nameCheck && phoneCheck && addressCheck) {
+            // 위 주석해제시 아래 else if문 제거
+            else if (selectedBtn != null) {
+                if (selectedBtn != btnOff) {
+                    inputName = name.text.toString()
+                    val inputPhone = phone.text.toString()
+                    val inputAddress = address.text.toString()
+                    val inputProfile = uri ?: return@setOnClickListener
+                    val lesserafim = AddMemberData(inputProfile,inputName, inputPhone,inputAddress)
+                    lesserafimList.add(lesserafim)
+                    Log.d("ContactProjects", "다이얼로그에서 넘기는 데이터 ${ lesserafimList}")
+                    val bundle = Bundle()
+                    bundle.putParcelableArrayList("FromDialog", lesserafimList)
+                    setFragmentResult("FromDialogKey",bundle)
+                    when (selectedBtn) {
+                        // 5분일 경우
+                        // btn5m -> handler.postDelayed({ reservationNotification(inputName) }, 5 * 60 * 1000)
+
+                        // 시연을 위해 분이 아닌 초 단위로 변경함.
+                        btn5m -> handler.postDelayed({ reservationNotification(inputName) }, 5000)
+                        btn10m -> handler.postDelayed({ reservationNotification(inputName) }, 10000)
+                        btn30m -> handler.postDelayed({ reservationNotification(inputName) }, 30000)
+                    }
+
+                }
                 dismiss()
             } else {
                 Toast.makeText(context, "형식에 맞지 않은 정보가 존재합니다.", Toast.LENGTH_SHORT).show()
@@ -236,51 +238,38 @@ class AddContactDialogFragment : DialogFragment() {
         return binding.root
     }
 
-    private fun ReservationNotification(context : Context){
+    private fun reservationNotification(name: String) {
+        val notificationManager =
+            binding.root.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val intent = Intent(binding.root.context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            binding.root.context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
-        val manager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val builder : NotificationCompat.Builder
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val channelID = "8_Sheraphim channel"
-            val channelName = "Contact Channel"
+        // 알림 채널 생성
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                channelID, channelName, NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "8_Sheraphim Description"
-                setShowBadge(true)
-
-                val uri : Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                val audioAttributes = AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .build()
-                setSound(uri, audioAttributes)
-                enableVibration(true)
-            }
-            // 채널 등록
-            manager.createNotificationChannel(channel)
-
-            // 채널로 builder 생성
-            builder = NotificationCompat.Builder(context, channelID)
-        }
-        else {
-            builder =  NotificationCompat.Builder(context)
+                "channel_id",
+                "Channel Name",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
         }
 
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.bell)
-        val intent = Intent(context, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        // 알림 생성
+        val notification = NotificationCompat.Builder(binding.root.context, "channel_id")
+            .setContentTitle("\uD83D\uDEA8 8_Sheraphim 알림 \uD83D\uDEA8")
+            .setContentText("$name 님이 연락을 기다리고 있어요...")
+            .setSmallIcon(R.drawable.bell) // 알림 아이콘 설정
+            // 알림 터치 시 제거
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
 
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-
-        builder.run {
-            setSmallIcon(R.drawable.bell)
-            setWhen(System.currentTimeMillis())
-            setContentText("연락처 알림 !")
-            setContentText("who 님이 기다리고 있어요...\nwho 님에게 연락하실 시간입니다 !")
-            addAction(R.drawable.bell, "Action", pendingIntent)
-        }
-        manager.notify(11, builder.build())
+        // 알림 표시
+        notificationManager.notify(1, notification) // 고유한 ID를 지정하여 알림을 구별
     }
 }
