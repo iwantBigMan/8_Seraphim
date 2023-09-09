@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/man"
-
+            android:scaleType="centerCrop"
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,7 +63,7 @@
             android:background="@drawable/gradation"
             app:layout_constraintBottom_toBottomOf="@+id/character"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"></androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toStartOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
