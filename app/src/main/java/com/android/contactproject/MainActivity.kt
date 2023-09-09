@@ -1,23 +1,7 @@
 package com.android.contactproject
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Dialog
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.android.contactproject.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
