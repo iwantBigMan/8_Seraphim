@@ -1,78 +1,82 @@
 package com.android.contactproject.contactlist
 
-
+import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.AddMemberData
 import com.android.contactproject.R
-//import com.android.contactproject.SwipeToDeleteCallback
 import com.android.contactproject.databinding.ContactListFragmentBinding
 import com.android.contactproject.detailPage.ContactDetailActivity
-import org.w3c.dom.Text
 
 
 class ContactListFragment : Fragment() {
 
-    private var list = mutableListOf<UserDataModel>()
+
+     private var list = mutableListOf<UserDataModel>()
+    private var isContactDataLoaded = false
 
     private var _binding: ContactListFragmentBinding? = null
     private val binding get() = _binding!!
     val listArray = arrayListOf<UserDataModel>()
     private val listAdapter by lazy {
-        ContactListFragmentAdapter(list).apply {
-            itemClick = object : ContactListFragmentAdapter.ItemClick {
-                override fun onClick(view: View, position: Int) {
-                    val item = list[position]
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("즐겨찾기")
-                    builder.setMessage("즐겨찾기를 하시겠읍니까?")
-                    Log.d("ContactProjects", "되돌아왔을떄 데이터 : ${item}")
-                    val listener = object : DialogInterface.OnClickListener {
-                        override fun onClick(dialog: DialogInterface?, which: Int) {
-                            when (which) {
-                                DialogInterface.BUTTON_POSITIVE -> {
-                                    item.isLike = !item.isLike
-                                    if (item.isLike) {
-                                        list.removeAt(position)
-                                        list.add(0, item)
-                                        if (!listArray.contains(item)) {
-                                            listArray.add(item)
-                                        }
-                                    } else {
-                                        listArray.remove(item)
-                                    }
-                                    notifyDataSetChanged()
-                                    val bundle = Bundle()
-                                    bundle.putParcelableArrayList("ToFavorites", listArray)
-                                    setFragmentResult("ToFavoritesKey", bundle)
-                                }
 
-                                DialogInterface.BUTTON_NEGATIVE -> {
-                                    dialog?.dismiss()
-                                }
-                            }
-                        }
-                    }
-                    builder.setPositiveButton("확인", listener)
-                    builder.setNegativeButton("취소", listener)
+      ContactListFragmentAdapter(list).apply {
+          itemClick = object:ContactListFragmentAdapter.ItemClick{
+              override fun onClick(view: View, position: Int) {
+                  val item = list[position]
+                  val builder = AlertDialog.Builder(requireContext())
+                  builder.setTitle("즐겨찾기")
+                  builder.setMessage("즐겨찾기를 하시겠읍니까?")
+                Log.d("ContactProjects","되돌아왔을떄 데이터 : ${item}")
+                  val listener = object : DialogInterface.OnClickListener {
+                      override fun onClick(dialog: DialogInterface?, which: Int) {
+                          when (which) {
+                              DialogInterface.BUTTON_POSITIVE -> {
+                                 item.isLike = !item.isLike
+                                  if(item.isLike){
+                                      list.removeAt(position)
+                                      list.add(0, item)
+                                      if (!listArray.contains(item)) {
+                                          listArray.add(item)
+                                      }
+                                  }else{
+                                      listArray.remove(item)
+                                  }
+                                  notifyDataSetChanged()
+                                  val bundle = Bundle()
+                                  bundle.putParcelableArrayList("ToFavorites", listArray)
+                                  setFragmentResult("ToFavoritesKey",bundle)
+                              }
 
-                    builder.show()
-                }
+                              DialogInterface.BUTTON_NEGATIVE -> {
+                                  dialog?.dismiss()
+                              }
+                          }
+                      }
+                  }
+                  builder.setPositiveButton("확인", listener)
+                  builder.setNegativeButton("취소", listener)
+
+                  builder.show()
+              }
 
 //              override fun onImageLongClick(view: View, position: Int) {
 //                  val bundle = Bundle()
@@ -107,19 +111,6 @@ class ContactListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.contact_list_fragment, container, false)
-        /*val dialogImage = view.findViewById<ImageView>(R.id.)
-        val dialogName = view.findViewById<TextView>(R.id.dialog_name)
-        val dialogPhone = view.findViewById<TextView>(R.id.dialog_phone)*/
-        /*arguments?.let {
-            val image = it.getInt("imageUri")
-            val name = it.getString("name")
-            val phone = it.getString("phone")
-
-            dialogImage.setImageResource(image)
-            dialogName.text = name
-            dialogPhone.text = phone
-        }*/
         parentFragmentManager.setFragmentResultListener(
             "ToContactListKey",
             this
@@ -244,13 +235,98 @@ class ContactListFragment : Fragment() {
         }
         initView()
 
-        binding.btnaddmember.setOnClickListener {
+        binding.btnaddmember.setOnClickListener{
+            if (!isContactDataLoaded){
+                Log.d("contact","btnaddmember isContactDataLoaded = $isContactDataLoaded")
+                requestContactsPermission()
+
+            }
+            else{
+                refreshContactList()
+            }
+            
             val popUp = AddContactDialogFragment()
             popUp.show((activity as AppCompatActivity).supportFragmentManager, "popUp")
         }
         return binding.root
     }
+    //주소록 읽기 권한 요청
+    private fun requestContactsPermission() {
+        val permission = Manifest.permission.READ_CONTACTS
+        val requestCode = 101
 
+        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+            // 이미 권한이 허용된 경우 주소록 정보 가져오기
+            fetchContacts()
+
+        } else {
+            // 권한 요청
+            requestPermissions(arrayOf(permission), requestCode)
+        }
+    }
+
+    // 주소로 데이터 가져오기
+    private fun fetchContacts() {
+        val projection = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        )
+        val cursor: Cursor? = requireContext().contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            projection,
+            null,
+            null,
+            null
+        )
+        cursor?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+            val phoneNumberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+
+            val updatedList = mutableListOf<UserDataModel>() // 업데이트된 리스트 생성
+
+            while (cursor.moveToNext()) {
+                val name = cursor.getString(nameIndex)
+                val phoneNumber = cursor.getString(phoneNumberIndex)
+
+                val userData = UserDataModel(0, phoneNumber, name, false)
+
+                updatedList.add(userData) // 업데이트된 리스트에 아이템 추가
+            }
+
+            list.addAll(updatedList) // 새로운 데이터로 업데이트
+
+            // 데이터를 불러왔으므로 플래그 업데이트
+            isContactDataLoaded = true
+
+            // 새로고침 수행
+            refreshContactList()
+        }
+    }
+    private fun refreshContactList() {
+        // RecyclerView 갱신 로직 추가
+        listAdapter.notifyDataSetChanged()
+    }
+
+    //권한 요청 다이얼로그 응답시 수행하는코드
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        Log.d("contact","requestCode = $requestCode")
+        when (requestCode) {
+            101 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("contact","PERMISSION_GRANTED")// 사용자가 권한을 허용한 경우 주소록 정보 가져오기
+                    fetchContacts()
+                    refreshContactList() // 화면 새로고침
+                } else {
+                    //거부하면 메세지 출력
+                    Toast.makeText(requireContext(), "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     private fun initView() = with(binding) {
         contactListRe.layoutManager = LinearLayoutManager(context)
@@ -258,9 +334,8 @@ class ContactListFragment : Fragment() {
         listAdapter.replace(list)
         contactListRe.setHasFixedSize(true)
         // ItemTouchHelper를 초기화하고 RecyclerView에 연결
-        //val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(requireContext(), listAdapter))
-        //itemTouchHelper.attachToRecyclerView(contactListRe)
-
+//        val itemTouchHelper = ItemTouchHelper(SwipeToCall(requireContext(), listAdapter))
+//        itemTouchHelper.attachToRecyclerView(contactListRe)
     }
 
 
@@ -268,6 +343,4 @@ class ContactListFragment : Fragment() {
         _binding = null
         super.onDestroyView()
     }
-
-
 }

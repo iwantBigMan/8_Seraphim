@@ -28,6 +28,8 @@ import com.bumptech.glide.Glide
 class MyPageFragment : Fragment() {
     private lateinit var binding: FragmentMyPageBinding
     private var selectedImageUri: Uri? = null
+    private lateinit var v1: View
+
 
     private val REQUEST_CODE_PICK_IMAGE = 101
 
@@ -37,6 +39,7 @@ class MyPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentMyPageBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,14 +47,18 @@ class MyPageFragment : Fragment() {
     //위에 startActivityForResult로 시작된 액티비티가 종료 후 돌아올 때 호출
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             //이미지의 Uri를 가져온다.
             val uri = data?.data
             if (uri != null) {
                 selectedImageUri = uri
-                val v1 = layoutInflater.inflate(R.layout.mypage_revise_dialog, null)
                 val setimage = v1.findViewById<ImageView>(R.id.dialog_image2)
-                setimage.setImageURI(selectedImageUri)
+                Glide.with(this)
+                    .load(selectedImageUri)
+                    .into(setimage)
+
             }
         }
     }
