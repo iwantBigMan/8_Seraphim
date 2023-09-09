@@ -26,7 +26,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.android.contactproject.contactlist.ContactListFragment
 import com.android.contactproject.databinding.FragmentAddContactDialogBinding
-import com.android.contactproject.detailPage.ContactDetailActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 

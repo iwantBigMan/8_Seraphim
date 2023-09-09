@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.android.contactproject.databinding.FragmentMyPageBinding
 import com.bumptech.glide.Glide
@@ -29,7 +30,6 @@ class MyPageFragment : Fragment() {
     private lateinit var binding: FragmentMyPageBinding
     private var selectedImageUri: Uri? = null
     private lateinit var v1: View
-
 
     private val REQUEST_CODE_PICK_IMAGE = 101
 
@@ -48,7 +48,6 @@ class MyPageFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             //이미지의 Uri를 가져온다.
             val uri = data?.data
@@ -58,7 +57,6 @@ class MyPageFragment : Fragment() {
                 Glide.with(this)
                     .load(selectedImageUri)
                     .into(setimage)
-
             }
         }
     }
@@ -72,7 +70,7 @@ class MyPageFragment : Fragment() {
         binding.myEvent.text = "5분뒤 알림"
 
         binding.btnRevise.setOnClickListener {
-            val v1 = layoutInflater.inflate(R.layout.mypage_revise_dialog, null)
+            v1 = layoutInflater.inflate(R.layout.mypage_revise_dialog, null)
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle("내정보 수정")
                 .setView(v1)
@@ -100,15 +98,10 @@ class MyPageFragment : Fragment() {
             val btn10m = v1.findViewById<Button>(R.id.btn_10m)
             val btn30m = v1.findViewById<Button>(R.id.btn_30m)
 
-            btnAccept.setOnClickListener {
-                if (selectedImageUri != null) {
-                    Glide.with(this)
-                        .load(selectedImageUri)
-                        .into(binding.myImage)
-                    Glide.with(this)
-                        .load(selectedImageUri)
-                        .into(setimage)
-                }
+            if (selectedImageUri != null) {
+                Glide.with(this)
+                    .load(selectedImageUri)
+                    .into(binding.myImage)
             }
 
             val editTextName = v1.findViewById<EditText>(R.id.dialog_name2)
@@ -222,10 +215,12 @@ class MyPageFragment : Fragment() {
                 binding.myMobile.text = editTextPhoneNumber.text.toString()
                 var newEvent = binding.myEvent.text
 
-
+                if (selectedBtn == null) {
+                    Toast.makeText(context, "알림 버튼을 설정해주세요 !", Toast.LENGTH_SHORT).show()
+                }
                 // 빠른 event 테스트 확인을 위해 잠시 주석 처리함 --------> 완전한 사용시 주석 해제 필요
-                //if (nameCheck && phoneCheck && selectedBtn != null) {
-                if (selectedBtn != null) {
+                //else if (nameCheck && phoneCheck) {
+                else if (selectedBtn != null) {
                     if (selectedBtn == btnOff) {
                         newEvent = "알림 OFF"
                     } else {
