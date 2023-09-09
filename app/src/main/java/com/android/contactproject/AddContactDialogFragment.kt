@@ -18,18 +18,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
-import com.android.contactproject.contactlist.ContactListFragment
 import com.android.contactproject.databinding.FragmentAddContactDialogBinding
-import com.android.contactproject.detailPage.ContactDetailActivity
 import com.bumptech.glide.Glide
-import com.google.android.material.snackbar.Snackbar
 
 class AddContactDialogFragment : DialogFragment() {
     private val binding by lazy { FragmentAddContactDialogBinding.inflate(layoutInflater) }
@@ -43,6 +39,13 @@ class AddContactDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // 유효성 필드 완료 후 accept 버튼 활성화 시 필요
+        var imageCheck = false
+        var nameCheck = false
+        var phoneCheck = false
+        var addressCheck = false
+        var inputname: String
+
         val lesserafimList = ArrayList<AddMemberData>()
         binding.apply {
             imageButton.setOnClickListener {
@@ -61,6 +64,8 @@ class AddContactDialogFragment : DialogFragment() {
                 Glide.with(this)
                     .load(uri)
                     .into(binding.dialogImage)
+
+                imageCheck = true
             }
         }
 
@@ -72,14 +77,6 @@ class AddContactDialogFragment : DialogFragment() {
         val btn5m = binding.btn5m
         val btn10m = binding.btn10m
         val btn30m = binding.btn30m
-
-
-        // 유효성 필드 완료 후 accept 버튼 활성화 시 필요
-        var nameCheck = false
-        var phoneCheck = false
-        var addressCheck = false
-        var inputname: String
-
 
         // name 텍스트 필드 유효성 검사
         name.addTextChangedListener(object : TextWatcher {
@@ -199,11 +196,18 @@ class AddContactDialogFragment : DialogFragment() {
             // dialog 닫기
             dismiss()
         }
-//         확인 버튼 클릭 시
+        // 확인 버튼 클릭 시
         binding.dialogAcceptbtn.setOnClickListener {
+            if (!imageCheck || selectedBtn == null) {
+                if (!imageCheck)
+                    Toast.makeText(context, "사진을 추가해주세요 !", Toast.LENGTH_SHORT).show()
+                if (selectedBtn == null)
+                    Toast.makeText(context, "알림 버튼을 설정해주세요 !", Toast.LENGTH_SHORT).show()
+            }
             // 빠른 event 테스트 확인을 위해 잠시 주석 처리함 --------> 완전한 사용시 주석 해제 필요
-            //if (nameCheck && phoneCheck && addressCheck && selectedBtn != null) {
-            if (selectedBtn != null) {
+            //else if (imageCheck && nameCheck && phoneCheck && addressCheck) {
+            // 위 주석해제시 아래 else if문 제거
+            else if (selectedBtn != null) {
                 if (selectedBtn != btnOff) {
                     inputName = name.text.toString()
                     val inputPhone = phone.text.toString()
