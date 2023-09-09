@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.android.contactproject.FavoritesAdapter
 import com.android.contactproject.R
 import com.android.contactproject.databinding.ContactListItemBinding
 import com.android.contactproject.databinding.ContactListItemTypeBinding
+import com.android.contactproject.databinding.GridTypeItemBinding
 
 
-class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : RecyclerView
+class ContactListFragmentAdapter(val list: ArrayList<UserDataModel>,private var viewType: Int) : RecyclerView
 .Adapter<RecyclerView.ViewHolder>
     () {
 
@@ -57,6 +59,11 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
                     .context),parent,false)
                 ViewHolder2(binding)
             }
+            3 -> {
+                val binding = GridTypeItemBinding.inflate(LayoutInflater.from(parent.context),
+                    parent,false)
+                GridHolder(binding)
+            }
             else -> throw IllegalArgumentException("잘못된 viewType 입니다.")
         }
 
@@ -70,6 +77,9 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
                holder.bind(item)
             }
             is ViewHolder2 ->{
+                holder.bind(item)
+            }
+            is GridHolder ->{
                 holder.bind(item)
             }
         }
@@ -134,6 +144,16 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
         val like = binding.typeMainLike
     }
 
+    inner class GridHolder(private val binding: GridTypeItemBinding): RecyclerView.ViewHolder
+        (binding.root){
+            fun bind(item:UserDataModel){
+                binding.apply {
+                    GridProfile.setImageResource(item.userImage)
+                    GridName.text = item.name
+                }
+            }
+        }
+
     fun replace(newList: MutableList<UserDataModel>) {
         notifyDataSetChanged()
     }
@@ -169,10 +189,14 @@ class ContactListFragmentAdapter(val list: MutableList<UserDataModel>) : Recycle
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position%2 ==0){
-            ViewType.leftType
-        }else{
-            ViewType.rightType
+        if (viewType == FavoritesAdapter.listViewType) {
+            return if (position % 2 == 0) {
+                ViewType.leftType
+            } else {
+                ViewType.rightType
+            }
+        } else {
+            return 3
         }
     }
 }
