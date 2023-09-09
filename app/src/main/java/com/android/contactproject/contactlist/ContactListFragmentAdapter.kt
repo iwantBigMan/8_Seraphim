@@ -181,12 +181,7 @@ class ContactListFragmentAdapter(val list: ArrayList<UserDataModel>,private var 
         }
     }
 
-    fun addItem(phoneNumberModel: UserDataModel, position: Int) {
-        if (position >= 0 && position <= list.size) {
-            list.add(position, phoneNumberModel)
-            notifyItemInserted(position)
-        }
-    }
+
 
     override fun getItemViewType(position: Int): Int {
         if (viewType == FavoritesAdapter.listViewType) {

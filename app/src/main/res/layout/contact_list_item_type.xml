@@ -2,13 +2,13 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="110dp"
     android:background="@drawable/gradent_call">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/swipe_view2"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:background="@color/white">
@@ -52,9 +52,9 @@
             android:text="@string/phoneNumber"
             android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/type_user_name"
+            app:layout_constraintEnd_toEndOf="@+id/type_user_name"
             app:layout_constraintTop_toBottomOf="@+id/type_user_name"
-            app:layout_constraintVertical_bias="0.333"/>
+            app:layout_constraintVertical_bias="0.333" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/type_iconCardView"

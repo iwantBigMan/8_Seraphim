@@ -16,7 +16,6 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.GridLayoutManager
@@ -26,14 +25,15 @@ import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.AddMemberData
 import com.android.contactproject.FavoritesAdapter
 import com.android.contactproject.R
+import com.android.contactproject.SwipeToCall
 import com.android.contactproject.databinding.ContactListFragmentBinding
 import com.android.contactproject.detailPage.ContactDetailActivity
 
 
 class ContactListFragment : Fragment() {
 
-    private var listAdapter: ContactListFragmentAdapter? = null
-     private var list = arrayListOf<UserDataModel>()
+    private lateinit var listAdapter: ContactListFragmentAdapter
+    private var list = arrayListOf<UserDataModel>()
     private var isContactDataLoaded = false
 
     private var _binding: ContactListFragmentBinding? = null
@@ -166,8 +166,6 @@ class ContactListFragment : Fragment() {
             )
 
         }
-//        initView()
-
         val sort_Lesserafim = ArrayList(list.sortedBy { it.name })
         binding.contactListRe.layoutManager =
             LinearLayoutManager(context)
@@ -176,24 +174,30 @@ class ContactListFragment : Fragment() {
             Log.d("ContactProjects", "버튼눌려지고있냐?")
             val menu = PopupMenu(context, it)
             menu.menuInflater.inflate(R.menu.menu, menu.menu)
-            if(list!=null){
+            if (list != null) {
                 menu.setOnMenuItemClickListener {
-                    when(it.itemId){
-                        R.id.ListView ->{
+                    when (it.itemId) {
+                        R.id.ListView -> {
                             binding.contactListRe.layoutManager =
                                 LinearLayoutManager(context)
                             UpdataContact(list, FavoritesAdapter.listViewType)
-                            true}
-                        R.id.GridView ->{
+                            true
+                        }
+
+                        R.id.GridView -> {
                             binding.contactListRe.layoutManager =
                                 GridLayoutManager(context, 3)
                             UpdataContact(list, FavoritesAdapter.gridViewType)
-                            true}
+                            true
+                        }
+
                         R.id.Sort -> {
                             binding.contactListRe.layoutManager =
                                 LinearLayoutManager(context)
                             UpdataContact(sort_Lesserafim, FavoritesAdapter.listViewType)
-                            true}
+                            true
+                        }
+
                         else -> false
                     }
                 }
@@ -201,49 +205,61 @@ class ContactListFragment : Fragment() {
             menu.show()
         }
 
-        binding.btnaddmember.setOnClickListener{
-            if (!isContactDataLoaded){
-                Log.d("contact","btnaddmember isContactDataLoaded = $isContactDataLoaded")
+        binding.btnaddmember.setOnClickListener {
+            if (!isContactDataLoaded) {
+                Log.d("contact", "btnaddmember isContactDataLoaded = $isContactDataLoaded")
                 requestContactsPermission()
 
-            }
-            else{
+            } else {
                 refreshContactList()
             }
-            
+
             val popUp = AddContactDialogFragment()
             popUp.show((activity as AppCompatActivity).supportFragmentManager, "popUp")
         }
+        initView()
+
         return binding.root
     }
-    fun UpdataContact(list:ArrayList<UserDataModel>, viewType:Int){
+    private fun initView() {
+        binding.contactListRe.layoutManager = LinearLayoutManager(context)
+        binding.contactListRe.adapter = listAdapter
+        listAdapter.replace(list)
+        binding.contactListRe.setHasFixedSize(true)
+
+        // ItemTouchHelper를 초기화하고 RecyclerView에 연결
+        val itemTouchHelper = ItemTouchHelper(SwipeToCall(requireContext(), listAdapter))
+        itemTouchHelper.attachToRecyclerView(binding.contactListRe)
+    }
+
+    fun UpdataContact(list: ArrayList<UserDataModel>, viewType: Int) {
         binding.contactListRe.apply {
-            adapter = ContactListFragmentAdapter(list,viewType).apply {
-                itemClick = object:ContactListFragmentAdapter.ItemClick{
+            listAdapter = ContactListFragmentAdapter(list, viewType).apply {
+                itemClick = object : ContactListFragmentAdapter.ItemClick {
                     override fun onClick(view: View, position: Int) {
                         val item = list[position]
                         val builder = AlertDialog.Builder(requireContext())
                         builder.setTitle("즐겨찾기")
                         builder.setMessage("즐겨찾기를 하시겠읍니까?")
-                        Log.d("ContactProjects","되돌아왔을떄 데이터 : ${item}")
+                        Log.d("ContactProjects", "되돌아왔을떄 데이터 : ${item}")
                         val listener = object : DialogInterface.OnClickListener {
                             override fun onClick(dialog: DialogInterface?, which: Int) {
                                 when (which) {
                                     DialogInterface.BUTTON_POSITIVE -> {
                                         item.isLike = !item.isLike
-                                        if(item.isLike){
+                                        if (item.isLike) {
                                             list.removeAt(position)
                                             list.add(0, item)
                                             if (!listArray.contains(item)) {
                                                 listArray.add(item)
                                             }
-                                        }else{
+                                        } else {
                                             listArray.remove(item)
                                         }
                                         notifyDataSetChanged()
                                         val bundle = Bundle()
                                         bundle.putParcelableArrayList("ToFavorites", listArray)
-                                        setFragmentResult("ToFavoritesKey",bundle)
+                                        setFragmentResult("ToFavoritesKey", bundle)
                                     }
 
                                     DialogInterface.BUTTON_NEGATIVE -> {
@@ -257,6 +273,7 @@ class ContactListFragment : Fragment() {
 
                         builder.show()
                     }
+
 
 //              override fun onImageLongClick(view: View, position: Int) {
 //                  val bundle = Bundle()
@@ -281,15 +298,22 @@ class ContactListFragment : Fragment() {
                     }
 
                 }
+
             }
+
         }
     }
+
     //주소록 읽기 권한 요청
     private fun requestContactsPermission() {
         val permission = Manifest.permission.READ_CONTACTS
         val requestCode = 101
 
-        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             // 이미 권한이 허용된 경우 주소록 정보 가져오기
             fetchContacts()
 
@@ -313,8 +337,10 @@ class ContactListFragment : Fragment() {
             null
         )
         cursor?.use { cursor ->
-            val nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-            val phoneNumberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            val nameIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+            val phoneNumberIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
 
             val updatedList = mutableListOf<UserDataModel>() // 업데이트된 리스트 생성
 
@@ -336,6 +362,7 @@ class ContactListFragment : Fragment() {
             refreshContactList()
         }
     }
+
     private fun refreshContactList() {
         // RecyclerView 갱신 로직 추가
         listAdapter?.notifyDataSetChanged()
@@ -347,11 +374,11 @@ class ContactListFragment : Fragment() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        Log.d("contact","requestCode = $requestCode")
+        Log.d("contact", "requestCode = $requestCode")
         when (requestCode) {
             101 -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("contact","PERMISSION_GRANTED")// 사용자가 권한을 허용한 경우 주소록 정보 가져오기
+                    Log.d("contact", "PERMISSION_GRANTED")// 사용자가 권한을 허용한 경우 주소록 정보 가져오기
                     fetchContacts()
                     refreshContactList() // 화면 새로고침
                 } else {
@@ -363,13 +390,20 @@ class ContactListFragment : Fragment() {
     }
 
 //    private fun initView() = with(binding) {
+//
 //        contactListRe.layoutManager = LinearLayoutManager(context)
 //        contactListRe.adapter = listAdapter
-//        listAdapter?.replace(list)
+//        listAdapter.replace(list)
 //        contactListRe.setHasFixedSize(true)
 //        // ItemTouchHelper를 초기화하고 RecyclerView에 연결
-////        val itemTouchHelper = ItemTouchHelper(SwipeToCall(requireContext(), listAdapter))
-////        itemTouchHelper.attachToRecyclerView(contactListRe)
+//        val itemTouchHelper = ItemTouchHelper(SwipeToCall(requireContext(), listAdapter))
+//        itemTouchHelper.attachToRecyclerView(contactListRe)
+//    }
+//private fun initView() {
+//    binding.contactListRe.layoutManager = LinearLayoutManager(context)
+//    binding.contactListRe.adapter = listAdapter
+//    listAdapter.replace(list)
+//    binding.contactListRe.setHasFixedSize(true)
 //    }
 
 
