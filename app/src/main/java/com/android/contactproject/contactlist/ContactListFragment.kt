@@ -58,7 +58,7 @@ class ContactListFragment : Fragment() {
         }
         parentFragmentManager.setFragmentResultListener("FromDialogKey", this) { key, result ->
             val getDialog = result.getParcelableArrayList<AddMemberData>("FromDialog")
-            Log.d("ContactProjects", "Fav   orites에서 다시 받아온 데이터 : $getDialog")
+            Log.d("ContactProjects", "다이얼로그에서 다시 받아온 데이터 : ${getDialog}")
         }
         _binding = ContactListFragmentBinding.inflate(inflater, container, false)
         list.apply {
