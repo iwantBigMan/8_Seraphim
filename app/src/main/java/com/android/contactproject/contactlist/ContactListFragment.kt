@@ -21,6 +21,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.AddMemberData
 import com.android.contactproject.FavoritesAdapter
@@ -32,8 +33,10 @@ import com.android.contactproject.detailPage.ContactDetailActivity
 
 class ContactListFragment : Fragment() {
 
-    private lateinit var listAdapter: ContactListFragmentAdapter
+//    private lateinit var listAdapter: ContactListFragmentAdapter
+private var listAdapter: ContactListFragmentAdapter? = null //위에꺼쓰면 null값처리못해서 플로팅버튼눌렀을떄 앱팅깁니다.
     private var list = arrayListOf<UserDataModel>()
+    private val getDialogList = ArrayList<AddMemberData>()
     private var isContactDataLoaded = false
 
     private var _binding: ContactListFragmentBinding? = null
@@ -59,7 +62,17 @@ class ContactListFragment : Fragment() {
         parentFragmentManager.setFragmentResultListener("FromDialogKey", this) { key, result ->
             val getDialog = result.getParcelableArrayList<AddMemberData>("FromDialog")
             Log.d("ContactProjects", "다이얼로그에서 다시 받아온 데이터 : ${getDialog}")
+            if(getDialog !=null){
+                getDialogList.addAll(getDialog)
+            }
+            binding.contactListRe2.apply {
+                adapter = ContactListItemAdapter(getDialogList)
+                layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+                setHasFixedSize(true)
+            }
         }
+
+
         _binding = ContactListFragmentBinding.inflate(inflater, container, false)
         list.apply {
             add(
