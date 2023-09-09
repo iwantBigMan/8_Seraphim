@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.contactproject.AddContactDialogFragment
 import com.android.contactproject.AddMemberData
 import com.android.contactproject.R
-import com.android.contactproject.SwipeToCall
 import com.android.contactproject.databinding.ContactListFragmentBinding
 import com.android.contactproject.detailPage.ContactDetailActivity
 
@@ -336,8 +335,8 @@ class ContactListFragment : Fragment() {
         listAdapter.replace(list)
         contactListRe.setHasFixedSize(true)
         // ItemTouchHelper를 초기화하고 RecyclerView에 연결
-        val itemTouchHelper = ItemTouchHelper(SwipeToCall(requireContext(), listAdapter))
-        itemTouchHelper.attachToRecyclerView(contactListRe)
+//        val itemTouchHelper = ItemTouchHelper(SwipeToCall(requireContext(), listAdapter))
+//        itemTouchHelper.attachToRecyclerView(contactListRe)
     }
 
 

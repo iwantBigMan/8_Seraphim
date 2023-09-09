@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,15 +25,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import com.android.contactproject.contactlist.ContactListFragment
 import com.android.contactproject.databinding.FragmentAddContactDialogBinding
 import com.android.contactproject.detailPage.ContactDetailActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 
 class AddContactDialogFragment : DialogFragment() {
-    private val binding by lazy{ FragmentAddContactDialogBinding.inflate(layoutInflater)}
-    lateinit var addMemberResult : ActivityResultLauncher<Intent>
-    private lateinit var addMember : LinearLayout
+    private val binding by lazy { FragmentAddContactDialogBinding.inflate(layoutInflater) }
+    lateinit var addMemberResult: ActivityResultLauncher<Intent>
     private var uri: Uri? = null
 
     private val handler = Handler(Looper.getMainLooper())
@@ -78,9 +79,11 @@ class AddContactDialogFragment : DialogFragment() {
                 dismiss()
             }
         }
-        addMemberResult = registerForActivityResult(ActivityResultContracts
-            .StartActivityForResult()){
-            if(it.resultCode == RESULT_OK && it.data !=null){
+        addMemberResult = registerForActivityResult(
+            ActivityResultContracts
+                .StartActivityForResult()
+        ) {
+            if (it.resultCode == RESULT_OK && it.data != null) {
                 uri = it.data!!.data
 
                 Glide.with(this)
@@ -232,7 +235,6 @@ class AddContactDialogFragment : DialogFragment() {
                 if (selectedBtn != btnOff) {
                     val inputName = name.text.toString()
                     when (selectedBtn) {
-
                         // 5분일 경우
                         // btn5m -> handler.postDelayed({ reservationNotification(inputName) }, 5 * 60 * 1000)
 
@@ -241,53 +243,58 @@ class AddContactDialogFragment : DialogFragment() {
                         btn10m -> handler.postDelayed({ reservationNotification(inputName) }, 10000)
                         btn30m -> handler.postDelayed({ reservationNotification(inputName) }, 30000)
                     }
-                    // 디테일 페이지로 값을 넘겨줌
-                    val intent = Intent(context, ContactDetailActivity::class.java)
-                    intent.putExtra("Event",false)
+
                 }
+                val bundle = Bundle()
+                val image = bundle.putInt("imageUri", binding.dialogImage.imageAlpha)
+                val naming = bundle.getString("name", name.text.toString())
+                bundle.getString("phone", phone.text.toString())
+                bundle.getString("email", address.text.toString())
+
+                Log.d("put image" ,"$image")
+                Log.d("put name", "$naming")
+                ContactListFragment().arguments = bundle
+
                 dismiss()
             } else {
                 Toast.makeText(context, "형식에 맞지 않은 정보가 존재합니다.", Toast.LENGTH_SHORT).show()
             }
-
         }
         return binding.root
     }
 
-        private fun reservationNotification(name: String) {
-            val notificationManager =
-                binding.root.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val intent = Intent(binding.root.context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(
-                binding.root.context,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    private fun reservationNotification(name: String) {
+        val notificationManager =
+            binding.root.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val intent = Intent(binding.root.context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            binding.root.context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
+        // 알림 채널 생성
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "channel_id",
+                "Channel Name",
+                NotificationManager.IMPORTANCE_DEFAULT
             )
-
-
-            // 알림 채널 생성
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(
-                    "channel_id",
-                    "Channel Name",
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-                notificationManager.createNotificationChannel(channel)
-            }
-
-            // 알림 생성
-            val notification = NotificationCompat.Builder(binding.root.context, "channel_id")
-                .setContentTitle("8_Sheraphim 알림 !!")
-                .setContentText("$name 님이 연락을 기다리고 있어요...")
-                .setSmallIcon(R.drawable.bell) // 알림 아이콘 설정
-                // 알림 터치 시 제거
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .build()
-
-            // 알림 표시
-            notificationManager.notify(1, notification) // 고유한 ID를 지정하여 알림을 구별
+            notificationManager.createNotificationChannel(channel)
         }
+
+        // 알림 생성
+        val notification = NotificationCompat.Builder(binding.root.context, "channel_id")
+            .setContentTitle("\uD83D\uDEA8 8_Sheraphim 알림 \uD83D\uDEA8")
+            .setContentText("$name 님이 연락을 기다리고 있어요...")
+            .setSmallIcon(R.drawable.bell) // 알림 아이콘 설정
+            // 알림 터치 시 제거
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        // 알림 표시
+        notificationManager.notify(1, notification) // 고유한 ID를 지정하여 알림을 구별
+    }
 }
