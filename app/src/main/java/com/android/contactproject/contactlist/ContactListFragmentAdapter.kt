@@ -94,7 +94,7 @@ class ContactListFragmentAdapter(val list: ArrayList<UserDataModel>,private var 
             // 데이터
             userName.text = item.name
             phNumber.text = item.ph
-            profileImage.setImageResource(list[position].userImage)
+            profileImage.setImageResource(item.userImage)
 
             itemView.setOnLongClickListener {
                 itemClick?.onImageLongClick(it, position)
