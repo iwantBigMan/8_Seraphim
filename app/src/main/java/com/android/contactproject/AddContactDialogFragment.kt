@@ -36,6 +36,8 @@ class AddContactDialogFragment : DialogFragment() {
     lateinit var addMemberResult: ActivityResultLauncher<Intent>
     private var uri: Uri? = null
 
+    private var inputName: String = ""
+
     private val handler = Handler(Looper.getMainLooper())
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,36 +49,6 @@ class AddContactDialogFragment : DialogFragment() {
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.type = "image/*"
                 addMemberResult.launch(intent)
-            }
-            dialogAcceptbtn.setOnClickListener {
-                val name = dialogName.text.toString()
-                val phone = dialogPhone.text.toString()
-                val address = dialogAddress.text.toString()
-                if (name.isNotBlank() && phone.isNotBlank() && address.isNotBlank()) {
-                    if (uri != null) {
-                        val profile = uri ?: return@setOnClickListener
-                        val lesserafim = AddMemberData(profile, name, phone, address)
-                        lesserafimList.add(lesserafim)
-                        val bundle = Bundle()
-                        bundle.putParcelableArrayList("FromDialog", lesserafimList)
-                        setFragmentResult("FromDialogKey", bundle)
-
-                        dismiss()
-                    } else {
-                        Snackbar.make(requireView(), "프로필 사진을 선택 해주세요.", Snackbar.LENGTH_SHORT)
-                            .apply {
-                                anchorView = binding.dialogImage
-                            }
-                            .show()
-                    }
-                } else {
-                    Snackbar.make(requireView(), "정보를 모두 입력하세요.", Snackbar.LENGTH_SHORT).apply {
-                        anchorView = binding.dialogImage
-                    }.show()
-                }
-            }
-            dialogCancelbtn.setOnClickListener {
-                dismiss()
             }
         }
         addMemberResult = registerForActivityResult(
@@ -227,13 +199,22 @@ class AddContactDialogFragment : DialogFragment() {
             // dialog 닫기
             dismiss()
         }
-        // 확인 버튼 클릭 시
+//         확인 버튼 클릭 시
         binding.dialogAcceptbtn.setOnClickListener {
             // 빠른 event 테스트 확인을 위해 잠시 주석 처리함 --------> 완전한 사용시 주석 해제 필요
             //if (nameCheck && phoneCheck && addressCheck && selectedBtn != null) {
             if (selectedBtn != null) {
                 if (selectedBtn != btnOff) {
-                    val inputName = name.text.toString()
+                    inputName = name.text.toString()
+                    val inputPhone = phone.text.toString()
+                    val inputAddress = address.text.toString()
+                    val inputProfile = uri ?: return@setOnClickListener
+                    val lesserafim = AddMemberData(inputProfile,inputName, inputPhone,inputAddress)
+                    lesserafimList.add(lesserafim)
+                    Log.d("ContactProjects", "다이얼로그에서 넘기는 데이터 ${ lesserafimList}")
+                    val bundle = Bundle()
+                    bundle.putParcelableArrayList("FromDialog", lesserafimList)
+                    setFragmentResult("FromDialogKey",bundle)
                     when (selectedBtn) {
                         // 5분일 경우
                         // btn5m -> handler.postDelayed({ reservationNotification(inputName) }, 5 * 60 * 1000)
@@ -245,16 +226,6 @@ class AddContactDialogFragment : DialogFragment() {
                     }
 
                 }
-                val bundle = Bundle()
-                val image = bundle.putInt("imageUri", binding.dialogImage.imageAlpha)
-                val naming = bundle.getString("name", name.text.toString())
-                bundle.getString("phone", phone.text.toString())
-                bundle.getString("email", address.text.toString())
-
-                Log.d("put image" ,"$image")
-                Log.d("put name", "$naming")
-                ContactListFragment().arguments = bundle
-
                 dismiss()
             } else {
                 Toast.makeText(context, "형식에 맞지 않은 정보가 존재합니다.", Toast.LENGTH_SHORT).show()
