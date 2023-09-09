@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".contactlist.ContactListFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -35,6 +35,16 @@
     </androidx.appcompat.widget.Toolbar>
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contact_list_re2"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contact_toolbar"
+        tools:listitem="@layout/contact_list_item"
+        />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contact_list_re"
@@ -42,7 +52,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contact_toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/contact_list_re2"
         tools:listitem="@layout/contact_list_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -51,10 +61,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:clickable="true"
         android:backgroundTint="@color/black"
-        app:tint="@color/white"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>
