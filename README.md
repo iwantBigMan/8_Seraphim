@@ -5,6 +5,12 @@
 ## 기술 스택
 * Kotlin
 * Android Studio
+## Notion & Wireframe 
+* Notion : https://www.notion.so/8-8-df296dba1d8c41ed9c22b00c5a136014
+* Wireframe : https://www.figma.com/file/YC4O1RqjIz6guYCCRpXs1n/8%EC%84%B8%EB%9D%BC%ED%95%8C?type=design&node-id=0-1&mode=design&t=BZ11SUBGit4w8ypU-0
+
+## 시연 연상 링크 
+* https://www.youtube.com/watch?v=tDE8srSuk44
 ## 구현 기능 및 역할 분담
 - UI
     - **연락처 리스트 - 궁현**
@@ -33,5 +39,4 @@
     - **PPT or. PDF 제작 - 다민**
     - **시연영상촬영 - 성수**
 
-## 시연 연상 링크 
-* https://www.youtube.com/watch?v=tDE8srSuk44
+
